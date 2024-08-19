@@ -51,6 +51,24 @@ const config = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
+        },
+        tokena: {
+          white: '#FFFFFF',
+          gray: '#D1D5DB',
+          dark: {
+            DEFAULT: '#1D1D1D',
+            secondary: '#0065EA',
+            gray: '#6B7280',
+            blue: {
+              DEFAULT: '#171923',
+              secondary: '#292C3B'
+            }
+          },
+          yellow: '#F2D604',
+          green: '#01B130',
+          red: '#CB0101',
+          blue: '#006EFF',
+          'light-gray': '#F3F4F6'
         }
       },
       borderRadius: {

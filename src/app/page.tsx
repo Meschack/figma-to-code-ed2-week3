@@ -1,116 +1,50 @@
 import { ModeToggle } from '@/components/mode-toggle'
-import Image from 'next/image'
 
 export default function Home() {
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <div className='z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'>
-        <p className='fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30'>
-          Get started by editing&nbsp;
-          <code className='font-mono font-bold'>src/app/page.tsx</code>
-        </p>
-        <div className='fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none'>
-          <a
-            className='pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0'
-            href='https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            By{' '}
-            <Image
-              src='/vercel.svg'
-              alt='Vercel Logo'
-              className='dark:invert'
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+      <ModeToggle />
 
-        <ModeToggle />
-      </div>
-
-      <div className="before:bg-gradient-radial after:bg-gradient-conic relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className='relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert'
-          src='/next.svg'
-          alt='Next.js Logo'
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className='mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left'>
-        <a
-          href='https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Docs{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-sm opacity-50'>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Learn{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-sm opacity-50'>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href='https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Templates{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-sm opacity-50'>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
-          className='group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <h2 className='mb-3 text-2xl font-semibold'>
-            Deploy{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none'>
-              -&gt;
-            </span>
-          </h2>
-          <p className='m-0 max-w-[30ch] text-balance text-sm opacity-50'>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <p className='text-tokena-dark-secondary'>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum officiis minus facilis nobis,
+        dignissimos veniam reiciendis praesentium sunt, laboriosam aperiam perspiciatis ratione
+        exercitationem! Iste rem eaque itaque quasi sint facilis.
+      </p>
+      <p>
+        Et molestias harum adipisci culpa praesentium tempora, voluptatem dicta doloribus voluptate
+        quam odit dolor, deleniti, veniam suscipit libero? A alias ipsa totam maxime placeat libero
+        amet saepe, facere repudiandae dolor.
+      </p>
+      <p>
+        Assumenda corrupti ducimus pariatur incidunt, odio eum, sint cum commodi repellendus qui
+        libero ab dolorum, ipsam nostrum ullam quisquam quia fugit possimus voluptates sed officiis.
+        Rerum reprehenderit maxime nihil dicta.
+      </p>
+      <p>
+        Consectetur esse quae, inventore eveniet aliquid nostrum! Rerum voluptatibus ea tenetur
+        inventore totam eum temporibus optio sapiente! Sunt rem, sapiente totam dolorem enim amet
+        commodi quam, deleniti, iusto vitae odit.
+      </p>
+      <p>
+        Iure ipsum repellendus laboriosam quasi sapiente cupiditate officia earum voluptates
+        debitis. Odit aut eius saepe laudantium nam sequi reiciendis qui nihil impedit possimus
+        quisquam iste enim, ex aliquid doloremque numquam.
+      </p>
+      <p>
+        Ipsam eligendi porro beatae corporis ut optio debitis consectetur, fugit possimus est!
+        Molestiae voluptatibus nisi voluptate officiis facilis? Sed a sunt corrupti ab aliquid
+        tenetur ipsa voluptatum accusantium odio sequi.
+      </p>
+      <p>
+        In dicta quibusdam, reprehenderit vero ducimus accusamus ut delectus, odio rem molestias
+        eaque cumque quod quisquam, voluptatum temporibus? Perspiciatis nostrum rerum atque culpa
+        delectus ipsa dolore harum repellendus quibusdam repudiandae?
+      </p>
+      <p>
+        Eligendi ab, dolorem perferendis earum eum alias ipsam blanditiis fuga id ipsa fugiat,
+        exercitationem quisquam maiores explicabo quia suscipit reiciendis reprehenderit
+        perspiciatis fugit. Minus molestiae eius fugiat debitis suscipit voluptatem!
+      </p>
     </main>
   )
 }
