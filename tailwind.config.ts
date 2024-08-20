@@ -71,6 +71,12 @@ const config = {
           'light-gray': '#F3F4F6'
         }
       },
+      fontSize: {
+        xxs: '10px'
+      },
+      spacing: {
+        4.5: '18px'
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

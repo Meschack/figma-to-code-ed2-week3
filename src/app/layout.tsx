@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { monaSans } from '@/config/fonts'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={monaSans.className}>
+      <body className={cn(monaSans.className, 'bg-tokena-white dark:bg-tokena-dark-blue')}>
         <ThemeProvider
           attribute='class'
           defaultTheme='system'
