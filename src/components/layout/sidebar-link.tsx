@@ -13,11 +13,10 @@ export const SidebarLink = ({ element, isActive }: Props) => (
     href={element.path}
     key={element.path}
     className={cn(
-      'group flex items-center gap-1 rounded-lg border px-2 py-3 hover:border-tokena-blue hover:bg-tokena-blue',
-      'dark:border-tokena-dark dark:bg-tokena-dark-blue dark:hover:border-tokena-blue dark:hover:bg-tokena-dark-secondary/70',
+      'group flex items-center gap-1 rounded-lg border px-2 py-3 hover:border-tokena-blue hover:bg-tokena-blue dark:hover:border-tokena-blue dark:hover:bg-tokena-dark-secondary/70',
       isActive
-        ? 'border-tokena-blue bg-tokena-blue text-tokena-white dark:border-tokena-dark dark:bg-tokena-dark-blue'
-        : 'border-tokena-white bg-tokena-white dark:hover:border-tokena-blue dark:hover:bg-tokena-dark-secondary/70'
+        ? 'border-tokena-blue bg-tokena-blue text-tokena-white dark:hover:border-tokena-blue dark:hover:bg-tokena-dark-secondary/70'
+        : 'border-tokena-white bg-tokena-white dark:border-tokena-dark dark:bg-tokena-dark-blue'
     )}
   >
     <element.icon

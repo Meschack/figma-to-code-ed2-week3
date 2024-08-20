@@ -1,3 +1,4 @@
+import { Header } from '@/components/layout/header'
 import { Sidebar } from '@/components/layout/sidebar'
 import { PropsWithChildren } from 'react'
 
@@ -8,10 +9,10 @@ const Layout = ({ children }: Props) => {
     <div className='flex'>
       <Sidebar />
 
-      <main className='grow'>
-        {/* Header */}
+      <main className='flex grow flex-col'>
+        <Header />
 
-        <div>{children}</div>
+        <div className='grow p-6'>{children}</div>
       </main>
     </div>
   )

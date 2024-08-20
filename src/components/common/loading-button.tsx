@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react'
-import { Button } from '@/components/common/button'
 import { cn } from '@/lib/utils'
 import { Icons } from '@/components/common/icons'
+import { Button } from '../ui/button'
 
 interface Props extends ComponentProps<typeof Button> {
   loading: boolean
@@ -16,20 +16,13 @@ export const LoadingButton = (props: Props) => {
     <Button
       disabled={loading}
       type='submit'
-      className={cn(
-        'flex items-center',
-        variant === 'transparent' && 'hover:bg-transparent hover:text-black',
-        className
-      )}
+      className={cn('flex items-center', className)}
       variant={variant}
       {...rest}
     >
       {loading ? (
         <>
-          <Icons.spinner
-            className={cn('-ml-1 mr-3 h-5 w-5 animate-spin')}
-            color={variant ? (variant === 'transparent' ? '#1D1D1D' : 'white') : '#1D1D1D'}
-          />
+          <Icons.spinner className={cn('-ml-1 mr-3 h-5 w-5 animate-spin')} />
           {loadingText}
         </>
       ) : (

@@ -322,7 +322,7 @@ export const Icons = {
       xmlns='http://www.w3.org/2000/svg'
       {...props}
     >
-      <g clip-path='url(#clip0_5087_290)'>
+      <g clipPath='url(#clip0_5087_290)'>
         <path
           d='M13.3333 11.6667C13.3333 12.357 13.8929 12.9167 14.5833 12.9167C15.2736 12.9167 15.8333 12.357 15.8333 11.6667C15.8333 10.9763 15.2736 10.4167 14.5833 10.4167C13.8929 10.4167 13.3333 10.9763 13.3333 11.6667Z'
           stroke='currentColor'
@@ -828,7 +828,7 @@ export const Icons = {
       xmlns='http://www.w3.org/2000/svg'
       {...props}
     >
-      <g clip-path='url(#clip0_5039_665)'>
+      <g clipPath='url(#clip0_5039_665)'>
         <path
           d='M14.583 14.583L18.333 18.333'
           stroke='currentColor'
