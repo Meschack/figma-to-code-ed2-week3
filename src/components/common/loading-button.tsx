@@ -22,12 +22,12 @@ export const LoadingButton = (props: Props) => {
     >
       {loading ? (
         <>
-          <Icons.spinner className={cn('-ml-1 mr-3 h-5 w-5 animate-spin')} />
+          <Icons.spinner className={cn('-ml-1 mr-3 size-5 animate-spin')} />
           {loadingText}
         </>
       ) : (
         <div className='flex items-center gap-1'>
-          {props.icon && <props.icon className='h-3.5 w-3.5' />}
+          {props.icon && <props.icon className='size-3.5' />}
           {children}
         </div>
       )}

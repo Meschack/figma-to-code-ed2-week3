@@ -31,7 +31,7 @@ export const Sidebar = ({}: Props) => {
   const pathname = usePathname()
 
   return (
-    <aside className='flex h-screen w-60 flex-col gap-9 overflow-auto border-r px-3.5 py-4'>
+    <aside className='sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r px-3.5 py-4'>
       <Logo />
 
       <div className='space-y-5'>
