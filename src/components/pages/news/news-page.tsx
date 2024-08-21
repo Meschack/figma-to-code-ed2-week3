@@ -1,7 +1,6 @@
 'use client'
 
 import { AIRDROPS_LIST } from '@/config/api/urls'
-import { useAirdrops } from '@/hooks/use-airdrops'
 import { CustomError } from '@/lib/custom-error'
 import { fetcher } from '@/lib/fetcher'
 import { useEffect, useState } from 'react'
@@ -25,8 +24,6 @@ interface GetParamsType {
 }
 
 export const NewsPage = ({ token }: Props) => {
-  const { get } = useAirdrops()
-
   const [state, setState] = useState<State>({ airdrops: Array.from({ length: 8 }), loading: true })
 
   const getAirdrops = async ({ limit, signal, start }: GetParamsType) => {

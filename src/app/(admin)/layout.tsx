@@ -7,12 +7,12 @@ interface Props extends PropsWithChildren {}
 const Layout = ({ children }: Props) => {
   return (
     <div className='flex h-screen overflow-y-hidden'>
-      <Sidebar />
+      <Sidebar className='hidden xl:flex' />
 
-      <main className='flex grow flex-col'>
+      <main className='flex flex-col'>
         <Header className='sticky' />
 
-        <div className='no-scrollbar grow overflow-y-scroll p-6'>{children}</div>
+        <div className='no-scrollbar overflow-y-scroll px-5 py-6 md:px-12 lg:px-6'>{children}</div>
       </main>
     </div>
   )

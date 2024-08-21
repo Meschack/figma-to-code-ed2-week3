@@ -1,16 +1,11 @@
-'use client'
+interface Props {}
 
 import { usePathname } from 'next/navigation'
 import { Icons } from '../common/icons'
 import { Logo } from '../common/logo'
 import { SidebarLink } from './sidebar-link'
 import { UserProfile } from '../user/user-profile'
-import { cn } from '@/lib/utils'
-import { ComponentProps } from 'react'
 
-interface Props extends ComponentProps<'aside'> {
-  onLinkClicked?: () => void
-}
 export interface SidebarElement {
   label: string
   path: string
@@ -31,17 +26,11 @@ const sidebarElements: SidebarElement[] = [
   { label: 'Settings', path: '/settings', icon: Icons.settings }
 ]
 
-export const Sidebar = ({ className, onLinkClicked, ...rest }: Props) => {
+export const SidebarContent = ({}: Props) => {
   const pathname = usePathname()
 
   return (
-    <aside
-      className={cn(
-        'sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r px-3.5 py-4',
-        className
-      )}
-      {...rest}
-    >
+    <aside className='sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r px-3.5 py-4'>
       <Logo />
 
       <div className='space-y-5'>
@@ -53,7 +42,6 @@ export const Sidebar = ({ className, onLinkClicked, ...rest }: Props) => {
               element={element}
               isActive={pathname === element.path}
               key={element.path}
-              onClick={onLinkClicked}
             />
           ))}
         </div>

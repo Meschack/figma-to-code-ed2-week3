@@ -2,13 +2,14 @@ import Link from 'next/link'
 import { SidebarElement } from './sidebar'
 import { cn } from '@/lib/utils'
 import { Icons } from '../common/icons'
+import { ComponentProps } from 'react'
 
-interface Props {
+interface Props extends Omit<ComponentProps<typeof Link>, 'href'> {
   element: SidebarElement
   isActive: boolean
 }
 
-export const SidebarLink = ({ element, isActive }: Props) => (
+export const SidebarLink = ({ element, isActive, className, ...rest }: Props) => (
   <Link
     href={element.path}
     key={element.path}
@@ -16,8 +17,10 @@ export const SidebarLink = ({ element, isActive }: Props) => (
       'group flex items-center gap-1 rounded-lg border px-2 py-3 hover:border-tokena-blue hover:bg-tokena-blue dark:hover:border-tokena-blue dark:hover:bg-tokena-dark-secondary/70',
       isActive
         ? 'border-tokena-blue bg-tokena-blue text-tokena-white dark:hover:border-tokena-blue dark:hover:bg-tokena-dark-secondary/70'
-        : 'border-tokena-white bg-tokena-white dark:border-tokena-dark dark:bg-tokena-dark-blue'
+        : 'border-tokena-white bg-tokena-white dark:border-tokena-dark dark:bg-tokena-dark-blue',
+      className
     )}
+    {...rest}
   >
     <element.icon
       className={cn(

@@ -3,6 +3,7 @@ import { Icons } from '../common/icons'
 import { ModeToggle } from '../mode-toggle'
 import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
+import { MobileMenu } from './mobile-menu'
 
 interface Props extends ComponentProps<'header'> {}
 
@@ -14,7 +15,9 @@ export const Header = ({ className, ...rest }: Props) => (
     )}
     {...rest}
   >
-    <div className='flex items-center gap-4'>
+    <div className='flex items-center gap-4 md:gap-6'>
+      <MobileMenu />
+
       <div className='flex flex-col font-medium'>
         <span className='text-sm text-tokena-dark dark:text-tokena-light-gray'>Dashboard</span>
         <span className='text-xs text-tokena-dark-gray dark:text-tokena-gray'>
@@ -22,7 +25,7 @@ export const Header = ({ className, ...rest }: Props) => (
         </span>
       </div>
 
-      <Button className='gap-1.5 text-sm font-medium text-white'>
+      <Button className='hidden gap-1.5 text-sm font-medium text-white md:flex'>
         <Icons.addWallet />
         <span>Connect wallet</span>
       </Button>

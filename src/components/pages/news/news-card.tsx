@@ -32,10 +32,7 @@ export const NewsCard = ({}: Props) => {
 
       {/* <CustomImage /> */}
 
-      <main
-        role='img'
-        className='h-48 w-full rounded-lg bg-tokena-light-gray dark:bg-[#1D1D1D]/70'
-      ></main>
+      <main role='img' className='h-48 rounded-lg bg-tokena-light-gray dark:bg-[#1D1D1D]/70'></main>
 
       <footer className='space-y-2'>
         <div className='space-y-1.5 *:text-xs'>
