@@ -1,8 +1,17 @@
-const coinMarketCap = process.env.NEXT_PUBLIC_COINMARKETCAP_API_BASE_URL
+const coinMarketCapBaseUrl = 'https://pro-api.coinmarketcap.com/v1'
+const coinGeckoBaseUrl = 'https://api.coingecko.com/api/v3'
 
 // COINMARKETCAP
 
 const AIRDROPS_LIST = (start: number = 1, limit: number = 8) =>
-  `/cryptocurrency/airdrops?start=${start}&limit=${limit}`
+  `${coinMarketCapBaseUrl}/cryptocurrency/airdrops?start=${start}&limit=${limit}`
 
-export { AIRDROPS_LIST }
+const COINS_LIST_MARKET_DATA = `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false#`
+
+const COIN_DATA = (id: string) =>
+  `${coinGeckoBaseUrl}/coins/${id}?localization=false&tickers=false&community_data=false&developer_data=false`
+
+const COIN_CHART_DATA = (id: string, days: number) =>
+  `${coinGeckoBaseUrl}/coins/${id}/market_chart?vs_currency=usd&days=${days}&interval=daily`
+
+export { AIRDROPS_LIST, COINS_LIST_MARKET_DATA, COIN_DATA, COIN_CHART_DATA }

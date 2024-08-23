@@ -7,7 +7,7 @@ export const Skeleton = ({ className, ...props }: Props) => {
   return (
     <div
       className={cn(
-        'bg-gray/40 relative overflow-hidden rounded-md before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent',
+        'relative overflow-hidden rounded-md bg-tokena-dark-gray/20 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent',
         className
       )}
       {...props}

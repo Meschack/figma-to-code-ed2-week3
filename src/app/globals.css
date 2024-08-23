@@ -22,11 +22,18 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --tokena-white: #ffffff;
+    --tokena-gray: #d1d5db;
+    --tokena-dark: #1d1d1d;
+    --tokena-dark-secondary: #0065ea;
+    --tokena-dark-gray: #6b7280;
+    --tokena-dark-blue: #171923;
+    --tokena-dark-blue-secondary: #292c3b;
+    --tokena-yellow: #f2d604;
+    --tokena-green: #01b130;
+    --tokena-red: #cb0101;
+    --tokena-blue: #006eff;
+    --tokena-light-gray: #f3f4f6;
   }
 
   .dark {
