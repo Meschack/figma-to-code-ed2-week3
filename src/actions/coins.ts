@@ -4,10 +4,10 @@ import { Coin, CoinDetails } from '@/types/coins'
 
 const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY
 
-export const getList = async () => {
+export const getList = async (category?: string, items?: number) => {
   if (!apiKey) throw new Error('Missing API key.')
 
-  const response = await fetcher.get<Coin[]>(COINS_LIST_MARKET_DATA, {
+  const response = await fetcher.get<Coin[]>(COINS_LIST_MARKET_DATA(category, items), {
     headers: { 'x-cg-demo-api-key': apiKey }
   })
 

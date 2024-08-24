@@ -12,6 +12,8 @@ interface CoinOverviewProps {
   coin: string
   onOpenChange: () => void
   open: boolean
+  isFavorite: boolean
+  onFavoriteStateToggle: () => void
 }
 
 export interface CoinOverviewState {
@@ -23,7 +25,13 @@ export interface CoinOverviewState {
   chartDataError?: boolean
 }
 
-export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) => {
+export const CoinOverview = ({
+  coin,
+  onOpenChange,
+  open,
+  isFavorite,
+  onFavoriteStateToggle
+}: CoinOverviewProps) => {
   const [state, setState] = useState<CoinOverviewState>({ loading: true })
   const dialogRef = useRef<HTMLDivElement>(null)
 
@@ -49,7 +57,7 @@ export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) =>
     try {
       setState(prev => ({ ...prev, chartDataLoading: true, chartDataError: false }))
 
-      const details = await getCoinChartData(coin, 179, signal)
+      const details = await getCoinChartData(coin, 180, signal)
 
       // Récupérer le prix total pour chaque occurence de trente jours
 
@@ -178,7 +186,11 @@ export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) =>
                   </div>
 
                   <span className='text-sm font-semibold'>
-                    ${state.details.market_data.current_price['usd'].toLocaleString('en')}
+                    {'usd' in state.details.market_data.current_price ? (
+                      `$${state.details.market_data.current_price['usd']}`
+                    ) : (
+                      <Skeleton className='h-5 w-14' />
+                    )}
                   </span>
                 </div>
 
@@ -187,13 +199,21 @@ export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) =>
                     <span className='text-tokena-dark dark:text-tokena-light-gray'>
                       Crypto Market Rank
                     </span>
-                    <Badge>Rank #{state.details.market_cap_rank}</Badge>
+                    {state.details.market_cap_rank ? (
+                      <Badge>Rank #{state.details.market_cap_rank}</Badge>
+                    ) : (
+                      <Skeleton className='h-5 w-14' />
+                    )}
                   </div>
 
                   <div>
                     <span className='text-tokena-dark dark:text-tokena-light-gray'>Market cap</span>
                     <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                      ${state.details.market_data.market_cap['usd'].toLocaleString('en')}
+                      {'usd' in state.details.market_data.market_cap ? (
+                        `$${state.details.market_data.market_cap['usd']}`
+                      ) : (
+                        <Skeleton className='h-5 w-14' />
+                      )}
                     </span>
                   </div>
                   <div>
@@ -201,15 +221,22 @@ export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) =>
                       Circulating supply
                     </span>
                     <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                      {state.details.market_data.circulating_supply}
+                      {state.details.market_data.circulating_supply ?? (
+                        <Skeleton className='h-5 w-14' />
+                      )}
                     </span>
                   </div>
                   <div>
                     <span className='text-tokena-dark dark:text-tokena-light-gray'>
                       24 Hour High
                     </span>
+
                     <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                      ${state.details.market_data.high_24h['usd']}
+                      {'usd' in state.details.market_data.high_24h ? (
+                        `$${state.details.market_data.high_24h['usd']}`
+                      ) : (
+                        <Skeleton className='h-5 w-14' />
+                      )}
                     </span>
                   </div>
                   <div>
@@ -217,7 +244,11 @@ export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) =>
                       24 Hour Low
                     </span>
                     <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                      ${state.details.market_data.low_24h['usd']}
+                      {'usd' in state.details.market_data.low_24h ? (
+                        `$${state.details.market_data.low_24h['usd']}`
+                      ) : (
+                        <Skeleton className='h-5 w-14' />
+                      )}
                     </span>
                   </div>
                 </div>
@@ -235,9 +266,20 @@ export const CoinOverview = ({ coin, onOpenChange, open }: CoinOverviewProps) =>
                   ></p>
                 </div>
 
-                <Button className='group w-full gap-1.5 bg-tokena-blue/[6%] font-medium text-tokena-blue hover:text-tokena-white'>
-                  <Icons.star className='size-4.5 !text-tokena-blue group-hover:!text-tokena-white' />
-                  <span>Add to favourites</span>
+                <Button
+                  onClick={onFavoriteStateToggle}
+                  className={cn(
+                    'group w-full gap-1.5 bg-tokena-blue/[6%] font-medium text-tokena-blue hover:text-tokena-white',
+                    isFavorite && 'bg-tokena-blue text-tokena-white'
+                  )}
+                >
+                  <Icons.star
+                    className={cn(
+                      'size-4.5 !text-tokena-blue group-hover:!text-tokena-white',
+                      isFavorite && '!text-tokena-white'
+                    )}
+                  />
+                  <span>{isFavorite ? 'Remove from favourites' : 'Add to favourites'}</span>
                 </Button>
               </div>
             </main>

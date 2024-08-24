@@ -1,12 +1,22 @@
 import { getList } from '@/actions/coins'
 import { ErrorComponent } from '@/components/common/error'
 import { DashboardPage } from '@/components/pages/dashboard/dashboard-page'
+import { createSearchParamsCache, parseAsInteger, parseAsString } from 'nuqs/server'
 
-interface Props {}
+interface Props {
+  searchParams: Record<string, string | string[] | undefined>
+}
 
-const Page = async ({}: Props) => {
+const searchParamsCache = createSearchParamsCache({
+  category: parseAsString,
+  items: parseAsInteger.withDefault(100)
+})
+
+const Page = async ({ searchParams }: Props) => {
+  const { category, items } = searchParamsCache.parse(searchParams)
+
   try {
-    const response = await getList()
+    const response = await getList(category || undefined, items)
 
     return <DashboardPage coins={response} />
   } catch (error) {
