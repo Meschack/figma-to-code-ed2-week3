@@ -34,7 +34,7 @@ export const MobileMenu = () => {
 
       <div
         className={cn(
-          'fixed inset-0 z-10 h-screen w-screen bg-tokena-white/20 dark:bg-tokena-dark/30',
+          'fixed inset-0 z-40 h-screen w-screen bg-tokena-white/20 dark:bg-tokena-dark/30',
           open ? 'block' : 'hidden'
         )}
       ></div>
@@ -42,7 +42,7 @@ export const MobileMenu = () => {
       <div
         ref={sidebarRef}
         className={cn(
-          'fixed inset-0 z-20 h-full w-fit transition-all duration-300 ease-out',
+          'fixed inset-0 z-50 h-full w-fit transition-all duration-300 ease-out',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >

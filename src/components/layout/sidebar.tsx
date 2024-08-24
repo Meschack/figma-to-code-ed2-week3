@@ -11,24 +11,25 @@ import { ComponentProps } from 'react'
 interface Props extends ComponentProps<'aside'> {
   onLinkClicked?: () => void
 }
+
 export interface SidebarElement {
   label: string
   path: string
-  icon: (typeof Icons)[keyof typeof Icons]
+  icon: keyof typeof Icons
   subElements?: []
 }
 
 const sidebarElements: SidebarElement[] = [
-  { label: 'Dashboard', path: '/dashboard', icon: Icons.home },
-  { label: 'News', path: '/news', icon: Icons.news },
-  { label: 'Activities', path: '/activities', icon: Icons.chart },
-  { label: 'Cards', path: '/cards', icon: Icons.creditCard },
-  { label: 'Reports', path: '/reports', icon: Icons.reports, subElements: [] },
-  { label: 'Notifications', path: '/notifications', icon: Icons.bell },
-  { label: 'Billing', path: '/billing', icon: Icons.wallet },
-  { label: 'Invoices', path: '/invoices', icon: Icons.invoice },
-  { label: 'Help center', path: '/help-center', icon: Icons.headPhone },
-  { label: 'Settings', path: '/settings', icon: Icons.settings }
+  { label: 'Dashboard', path: '/dashboard', icon: 'home' },
+  { label: 'News', path: '/news', icon: 'news' },
+  { label: 'Activities', path: '/activities', icon: 'chart' },
+  { label: 'Cards', path: '/cards', icon: 'creditCard' },
+  { label: 'Reports', path: '/reports', icon: 'reports', subElements: [] },
+  { label: 'Notifications', path: '/notifications', icon: 'bell' },
+  { label: 'Billing', path: '/billing', icon: 'wallet' },
+  { label: 'Invoices', path: '/invoices', icon: 'invoice' },
+  { label: 'Help center', path: '/help-center', icon: 'headPhone' },
+  { label: 'Settings', path: '/settings', icon: 'settings' }
 ]
 
 export const Sidebar = ({ className, onLinkClicked, ...rest }: Props) => {
@@ -37,7 +38,7 @@ export const Sidebar = ({ className, onLinkClicked, ...rest }: Props) => {
   return (
     <aside
       className={cn(
-        'sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r px-3.5 py-4',
+        'sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r bg-tokena-white px-3.5 py-4 dark:bg-tokena-dark-blue',
         className
       )}
       {...rest}
