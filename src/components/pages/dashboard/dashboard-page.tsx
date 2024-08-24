@@ -17,8 +17,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useCoins } from '@/hooks/use-coins'
 import { cn } from '@/lib/utils'
 import { Category, Coin } from '@/types/coins'
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs'
-import { useEffect, useState } from 'react'
+import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
+import { useEffect, useState, useTransition } from 'react'
 
 interface Props {
   coins: Coin[]
@@ -26,8 +26,7 @@ interface Props {
 
 interface State {
   selectedCoin?: string
-  visibleColumns: string[]
-  selectedRows: string[]
+  favoriteRows: string[]
   categories?: Category[]
   categoriesLoading: boolean
   selectedCategory?: string
@@ -43,16 +42,32 @@ const _columns = [
   { key: 'last_seven_days', label: 'Last seven days' }
 ] as const
 
+const sortingOptions = [
+  { value: 'market_cap_asc', label: 'Market Cap Asc' },
+  { value: 'market_cap_desc', label: 'Market Cap Desc' },
+  { value: 'volume_asc', label: 'Volume Asc' },
+  { value: 'volume_desc', label: 'Volume Desc' },
+  { value: 'id_asc', label: 'ID Asc' },
+  { value: 'id_desc', label: 'ID Desc' }
+] as const
+
 export const DashboardPage = ({ coins }: Props) => {
   const [state, setState] = useState<State>({
-    visibleColumns: _columns.map(col => col.key),
-    selectedRows: [],
+    favoriteRows: [],
     categoriesLoading: true
   })
 
+  const [isUpdating, startTransition] = useTransition()
+
   const [searchParams, setSearchParams] = useQueryStates(
-    { category: parseAsString, items: parseAsInteger.withDefault(100) },
-    { clearOnDefault: true, history: 'push', shallow: false }
+    {
+      category: parseAsString,
+      items: parseAsInteger.withDefault(100),
+      sort: parseAsStringEnum([...sortingOptions.map(el => el.value)]).withDefault(
+        'market_cap_desc'
+      )
+    },
+    { clearOnDefault: true, history: 'push', shallow: false, startTransition }
   )
 
   const { getCategories } = useCoins()
@@ -61,21 +76,12 @@ export const DashboardPage = ({ coins }: Props) => {
     setState(prev => ({ ...prev, selectedCoin: coin }))
   }
 
-  const handleColumnChange = (value: string, checked: boolean) => {
-    setState(prev => ({
-      ...prev,
-      visibleColumns: !checked
-        ? prev.visibleColumns.filter(el => el !== value)
-        : [...prev.visibleColumns, value]
-    }))
-  }
-
   const handleColumnSelect = (value: string) => {
     setState(prev => ({
       ...prev,
-      selectedRows: prev.selectedRows.includes(value)
-        ? prev.selectedRows.filter(el => el !== value)
-        : [...prev.selectedRows, value]
+      favoriteRows: prev.favoriteRows.includes(value)
+        ? prev.favoriteRows.filter(el => el !== value)
+        : [...prev.favoriteRows, value]
     }))
   }
 
@@ -83,7 +89,7 @@ export const DashboardPage = ({ coins }: Props) => {
     try {
       setState(prev => ({ ...prev, categoriesLoading: true }))
 
-      const categories = await getCategories()
+      const categories = await getCategories(signal)
 
       setState(prev => ({ ...prev, categories, categoriesLoading: false }))
     } catch (error) {
@@ -95,6 +101,16 @@ export const DashboardPage = ({ coins }: Props) => {
 
   const onCategoryChange = (category: string) => {
     setSearchParams(prev => ({ ...prev, category: prev.category === category ? null : category }))
+  }
+
+  const onItemsLengthChange = (length: number, checked: boolean) => {
+    setSearchParams(prev => ({ ...prev, items: checked ? length : 100 }))
+  }
+  const onSortingOptionChange = (value: string) => {
+    setSearchParams(prev => ({
+      ...prev,
+      sort: prev.sort === value ? null : (value as NonNullable<typeof prev.sort>)
+    }))
   }
 
   useEffect(() => {
@@ -125,8 +141,12 @@ export const DashboardPage = ({ coins }: Props) => {
             ) : state.categories ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant='outline' className='order-last h-full'>
-                    Catégories{' '}
+                  <Button variant='outline'>
+                    {searchParams.category
+                      ? state.categories.find(
+                          category => category.category_id === searchParams.category
+                        )?.name || 'Categories'
+                      : 'Categories'}
                     <Icons.chevronUpDown className='ml-2 size-4 dark:text-tokena-light-gray' />
                   </Button>
                 </DropdownMenuTrigger>
@@ -162,30 +182,49 @@ export const DashboardPage = ({ coins }: Props) => {
               <span className='text-base font-semibold text-tokena-dark dark:text-tokena-light-gray'>
                 Market
               </span>
-              <Button variant='outline' size='icon'>
-                <Icons.ellipsis className='dark:!text-tokena-light-gray' />
-              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant='outline' size='icon'>
+                    <Icons.ellipsis className='dark:!text-tokena-light-gray' />
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align='end'>
+                  <DropdownMenuRadioGroup
+                    value={searchParams.category || undefined}
+                    onValueChange={onSortingOptionChange}
+                    className='no-scrollbar max-h-80 overflow-y-auto'
+                  >
+                    {sortingOptions.map(option => {
+                      return (
+                        <DropdownMenuRadioItem key={option.value} value={option.value}>
+                          {option.label}
+                        </DropdownMenuRadioItem>
+                      )
+                    })}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </header>
 
             <main className='no-scrollbar overflow-x-auto'>
               <table className='w-full border-collapse'>
                 <thead>
                   <tr className='bg-tokena-light-gray *:px-6 *:py-3 *:text-left *:text-sm *:font-normal *:text-tokena-dark dark:bg-tokena-light-gray/10 *:dark:text-tokena-light-gray'>
-                    <th></th>
-                    {_columns.map(
-                      (column, index) =>
-                        state.visibleColumns.includes(column.key) && (
-                          <th
-                            key={column.key}
-                            className={cn(
-                              'whitespace-nowrap',
-                              index === _columns.length - 1 && 'text-center'
-                            )}
-                          >
-                            {column.label}
-                          </th>
-                        )
-                    )}
+                    <th id='empty-column-head'></th>
+
+                    {_columns.map((column, index) => (
+                      <th
+                        key={column.key}
+                        className={cn(
+                          'whitespace-nowrap',
+                          index === _columns.length - 1 && 'text-center'
+                        )}
+                      >
+                        {column.label}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
 
@@ -199,69 +238,84 @@ export const DashboardPage = ({ coins }: Props) => {
                         <Icons.star
                           className={cn(
                             'size-5 dark:text-tokena-white',
-                            state.selectedRows.includes(coin.id) &&
-                              'fill-tokena-yellow text-tokena-yellow'
+                            state.favoriteRows.includes(coin.id) &&
+                              'fill-tokena-yellow text-tokena-yellow dark:text-tokena-yellow'
                           )}
                         />
                       </td>
 
-                      {state.visibleColumns.includes('id') && (
-                        <td className='text-sm dark:text-tokena-light-gray'>{index + 1}</td>
-                      )}
+                      <td className='text-sm dark:text-tokena-light-gray'>
+                        {isUpdating ? <Skeleton className='size-4' /> : index + 1}
+                      </td>
 
-                      {state.visibleColumns.includes('coin') && (
-                        <td className='flex cursor-pointer' onClick={() => onCoinClick(coin.id)}>
-                          <img
-                            src={coin.image}
-                            alt={coin.name}
-                            className='size-6'
-                            width={24}
-                            height={24}
-                          />
+                      <td
+                        className='flex cursor-pointer items-center'
+                        onClick={() => onCoinClick(coin.id)}
+                      >
+                        {isUpdating ? (
+                          <>
+                            <Skeleton className='size-6 rounded-full' />
+                            <Skeleton className='h-4 w-56' />
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src={coin.image}
+                              alt={coin.name}
+                              className='size-6'
+                              width={24}
+                              height={24}
+                            />
 
-                          <p className='inline-flex h-6 items-center whitespace-nowrap text-sm'>
-                            {coin.name}-{coin.symbol.toUpperCase()}
-                          </p>
-                        </td>
-                      )}
+                            <p className='inline-flex h-6 items-center whitespace-nowrap text-sm'>
+                              {coin.name}-{coin.symbol.toUpperCase()}
+                            </p>
+                          </>
+                        )}
+                      </td>
 
-                      {state.visibleColumns.includes('price') && (
-                        <td className='text-sm'>
-                          {coin.current_price && `$${coin.current_price.toLocaleString('en')}`}
-                        </td>
-                      )}
+                      <td className='text-sm'>
+                        {isUpdating ? (
+                          <Skeleton className='h-4 w-24' />
+                        ) : (
+                          coin.current_price && `$${coin.current_price.toLocaleString('en')}`
+                        )}
+                      </td>
 
-                      {state.visibleColumns.includes('price_change_percentage_24h') && (
-                        <td>
-                          {coin.price_change_percentage_24h && (
+                      <td>
+                        {isUpdating ? (
+                          <Skeleton className='h-4 w-6 rounded-full' />
+                        ) : (
+                          coin.price_change_percentage_24h && (
                             <Badge
                               variant={
                                 coin.price_change_percentage_24h > 0 ? 'success' : 'destructive'
                               }
                               size='lg'
-                              className=''
                             >
                               {coin.price_change_percentage_24h.toFixed(2)}%
                             </Badge>
-                          )}
-                        </td>
-                      )}
+                          )
+                        )}
+                      </td>
 
-                      {state.visibleColumns.includes('total_volume') && (
-                        <td className='text-sm'>
-                          {coin.total_volume && `$${coin.total_volume.toLocaleString('en')}`}
-                        </td>
-                      )}
+                      <td className='text-sm'>
+                        {isUpdating ? (
+                          <Skeleton className='h-4 w-16' />
+                        ) : (
+                          coin.total_volume && `$${coin.total_volume.toLocaleString('en')}`
+                        )}
+                      </td>
 
-                      {state.visibleColumns.includes('market_cap') && (
-                        <td className='text-sm'>
-                          {coin.market_cap && `$${coin.market_cap.toLocaleString('en')}`}
-                        </td>
-                      )}
+                      <td className='text-sm'>
+                        {isUpdating ? (
+                          <Skeleton className='h-4 w-16' />
+                        ) : (
+                          coin.market_cap && `$${coin.market_cap.toLocaleString('en')}`
+                        )}
+                      </td>
 
-                      {state.visibleColumns.includes('last_seven_days') && (
-                        <td className='text-center text-sm'>Graphique</td>
-                      )}
+                      {<td className='text-center text-sm'>Graphique</td>}
                     </tr>
                   ))}
                 </tbody>
@@ -281,14 +335,14 @@ export const DashboardPage = ({ coins }: Props) => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align='end'>
-                  {_columns.map(column => {
+                  {[50, 100, 150].map(length => {
                     return (
                       <DropdownMenuCheckboxItem
-                        key={column.key}
-                        checked={state.visibleColumns.includes(column.key)}
-                        onCheckedChange={value => handleColumnChange(column.key, value)}
+                        key={length}
+                        checked={searchParams.items === length}
+                        onCheckedChange={value => onItemsLengthChange(length, value)}
                       >
-                        {column.label}
+                        {length}
                       </DropdownMenuCheckboxItem>
                     )
                   })}
@@ -303,7 +357,7 @@ export const DashboardPage = ({ coins }: Props) => {
             coin={state.selectedCoin}
             open={!!state.selectedCoin}
             onOpenChange={() => onCoinClick()}
-            isFavorite={state.selectedRows.includes(state.selectedCoin)}
+            isFavorite={state.favoriteRows.includes(state.selectedCoin)}
             onFavoriteStateToggle={() => handleColumnSelect(state.selectedCoin!)}
           />
         )}

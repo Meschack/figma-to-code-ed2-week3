@@ -1,4 +1,5 @@
 const coinMarketCapBaseUrl = 'https://pro-api.coinmarketcap.com/v1'
+
 const coinGeckoBaseUrl = 'https://api.coingecko.com/api/v3'
 
 // COINMARKETCAP
@@ -6,11 +7,20 @@ const coinGeckoBaseUrl = 'https://api.coingecko.com/api/v3'
 const AIRDROPS_LIST = (start: number = 1, limit: number = 8) =>
   `${coinMarketCapBaseUrl}/cryptocurrency/airdrops?start=${start}&limit=${limit}`
 
-const COINS_LIST_MARKET_DATA = (category?: string, items?: number) => {
+// COINGECKO
+
+const COINS_LIST_MARKET_DATA = (category?: string, items?: number, sort?: string) => {
   const categoryString = category ? `&category=${category}` : ''
+
   const itemsString = items ? `&per_page=${items}` : ''
 
-  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd${categoryString}&order=market_cap_desc${itemsString}&page=1`
+  const orderString = sort ? `&order=${sort}` : ''
+
+  const url = `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd${categoryString}${orderString}${itemsString}&page=1`
+
+  console.log(url)
+
+  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd${categoryString}${orderString}${itemsString}&page=1`
 }
 
 const COIN_DATA = (id: string) =>

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import { HTMLAttributes } from 'react'
 
 const badgeVariants = cva(
-  'flex justify-center items-center rounded-full py-1 font-semibold transition-colors w-fit',
+  'flex justify-center items-center rounded-full pt-1 pb-0.5 font-semibold transition-colors w-fit',
   {
     variants: {
       variant: {
