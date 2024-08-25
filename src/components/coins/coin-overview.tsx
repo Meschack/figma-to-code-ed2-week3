@@ -2,11 +2,12 @@ import { cn } from '@/lib/utils'
 import { Icons } from '../common/icons'
 import { Button } from '../ui/button'
 import { Skeleton } from '../ui/skeleton'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCoins } from '@/hooks/use-coins'
 import { CoinDetails } from '@/types/coins'
 import { Badge } from '../ui/badge'
 import { CoinChart } from './coin-chart'
+import Image from 'next/image'
 
 interface CoinOverviewProps {
   coin: string
@@ -107,23 +108,37 @@ export const CoinOverview = ({
     return () => controller.abort()
   }, [])
 
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (dialogRef.current && !dialogRef.current.contains(event.target as Node)) {
+      onOpenChange()
+    }
+  }, [])
+
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dialogRef.current && !dialogRef.current.contains(event.target as Node)) {
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [onOpenChange])
+
+  const handleEscapeKey = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && open) {
         onOpenChange()
       }
-    }
+    },
+    [open]
+  )
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onOpenChange])
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscapeKey)
+
+    return () => document.removeEventListener('keydown', handleEscapeKey)
+  }, [open])
 
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex max-h-screen w-screen justify-end bg-tokena-dark/30 p-5 transition-all duration-300 dark:bg-tokena-dark/60',
+        'absolute inset-0 z-50 flex max-h-screen w-screen justify-end bg-tokena-dark/30 p-5 transition-all duration-300 dark:bg-tokena-dark/60',
         open ? 'translate-x-0' : 'translate-x-full'
       )}
     >
@@ -172,7 +187,7 @@ export const CoinOverview = ({
               <div className='space-y-6'>
                 <div className='flex items-center justify-between text-sm font-semibold'>
                   <div className='flex items-center justify-between space-x-1.5 dark:text-tokena-light-gray'>
-                    <img
+                    <Image
                       src={state.details.image.large}
                       width={32}
                       height={32}

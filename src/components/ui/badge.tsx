@@ -8,9 +8,9 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        ghost: 'bg-tokena-light-gray !text-tokena-dark',
-        destructive: 'bg-tokena-red/15 !text-tokena-red',
-        success: 'bg-tokena-green/15 !text-tokena-green'
+        ghost: 'bg-tokena-light-gray !text-tokena-dark [&>svg]:!text-tokena-dark',
+        destructive: 'bg-tokena-red/15 !text-tokena-red [&>svg]:!text-tokena-red',
+        success: 'bg-tokena-green/15 !text-tokena-green [&>svg]:!text-tokena-green'
       },
       size: {
         sm: 'px-1.5 gap-[3px] text-xxs',

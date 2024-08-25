@@ -7,6 +7,7 @@ import { Trendings } from '@/types/trendings'
 import { useState, useEffect } from 'react'
 import { TrendingCard } from './trending-card'
 import { TrendingCardLoading } from './trending-card-loading'
+import { Icons } from '@/components/common/icons'
 
 interface State {
   trendings: Trendings['coins']
@@ -40,17 +41,32 @@ export const Trending = ({}: Props) => {
   }, [])
 
   return (
-    <div className='grid grid-cols-2 gap-1.5 xl:grid-cols-4'>
-      {state.trendingsLoading ? (
-        Array.from({ length: 4 }).map((_, index) => <TrendingCardLoading key={index} />)
-      ) : state.trendingsError ? (
-        <div className='col-span-full'>
-          Erreur lors de la récupération des données.{' '}
-          <Button onClick={() => getTrendingCoins()}>Réessayer</Button>
-        </div>
-      ) : (
-        state.trendings.slice(0, 4).map(({ item }) => <TrendingCard item={item} key={item.id} />)
-      )}
+    <div className='space-y-3'>
+      <div className='flex items-center justify-between'>
+        <h2 className='text-base font-semibold text-tokena-dark dark:text-tokena-white'>
+          Trending
+        </h2>
+        <Button
+          variant='link'
+          className='text-xxs font-medium text-tokena-dark-gray dark:text-tokena-light-gray'
+        >
+          Voir plus
+          <Icons.chevronRight className='size-3.5 font-medium text-tokena-dark-gray dark:text-tokena-gray' />
+        </Button>
+      </div>
+
+      <div className='grid grid-cols-2 gap-1.5 xl:grid-cols-4'>
+        {state.trendingsLoading ? (
+          Array.from({ length: 4 }).map((_, index) => <TrendingCardLoading key={index} />)
+        ) : state.trendingsError ? (
+          <div className='col-span-full'>
+            Erreur lors de la récupération des données.{' '}
+            <Button onClick={() => getTrendingCoins()}>Réessayer</Button>
+          </div>
+        ) : (
+          state.trendings.slice(0, 4).map(({ item }) => <TrendingCard item={item} key={item.id} />)
+        )}
+      </div>
     </div>
   )
 }

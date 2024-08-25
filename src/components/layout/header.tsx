@@ -33,11 +33,11 @@ export const Header = ({ className, ...rest }: Props) => (
 
     <div className='flex items-center gap-3'>
       <Button
-        className='gap-0.5 *:text-tokena-dark-gray dark:border-tokena-dark-gray *:dark:text-tokena-light-gray'
+        className='gap-0.5 border-tokena-gray *:text-tokena-dark-gray dark:border-tokena-dark-gray'
         variant='outline'
       >
-        <span>USD</span>
-        <Icons.chevronUpDown className='size-4' />
+        <span className='text-tokena-dark-gray dark:text-tokena-light-gray'>USD</span>
+        <Icons.chevronUpDown className='size-4 text-tokena-dark-gray dark:text-tokena-gray' />
       </Button>
 
       <ModeToggle />

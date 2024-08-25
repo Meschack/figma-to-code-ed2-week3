@@ -20,6 +20,7 @@ import { Category, Coin } from '@/types/coins'
 import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
 import { useEffect, useState, useTransition } from 'react'
 import { Trending } from './trending'
+import Image from 'next/image'
 
 interface Props {
   coins: Coin[]
@@ -260,7 +261,7 @@ export const DashboardPage = ({ coins }: Props) => {
                           </>
                         ) : (
                           <>
-                            <img
+                            <Image
                               src={coin.image}
                               alt={coin.name}
                               className='size-6'
@@ -352,17 +353,17 @@ export const DashboardPage = ({ coins }: Props) => {
             </div>
           </div>
         </div>
-
-        {state.selectedCoin && (
-          <CoinOverview
-            coin={state.selectedCoin}
-            open={!!state.selectedCoin}
-            onOpenChange={() => onCoinClick()}
-            isFavorite={state.favoriteRows.includes(state.selectedCoin)}
-            onFavoriteStateToggle={() => handleColumnSelect(state.selectedCoin!)}
-          />
-        )}
       </div>
+
+      {state.selectedCoin && (
+        <CoinOverview
+          coin={state.selectedCoin}
+          open={!!state.selectedCoin}
+          onOpenChange={() => onCoinClick()}
+          isFavorite={state.favoriteRows.includes(state.selectedCoin)}
+          onFavoriteStateToggle={() => handleColumnSelect(state.selectedCoin!)}
+        />
+      )}
     </>
   )
 }
