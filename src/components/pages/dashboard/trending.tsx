@@ -20,9 +20,9 @@ export const Trending = ({}: Props) => {
 
   const getTrendingCoins = async (signal?: AbortSignal) => {
     try {
-      setState(prev => ({ ...prev, trendingsLoading: true }))
+      setState(prev => ({ ...prev, trendingsLoading: true, trendingsError: false }))
 
-      const { data } = await fetcher.get<Trendings>(TRENDING_SEARCH)
+      const { data } = await fetcher.get<Trendings>(TRENDING_SEARCH, { signal })
 
       setState(prev => ({ ...prev, trendingsLoading: false, trendings: data.coins }))
     } catch (error) {
@@ -61,7 +61,9 @@ export const Trending = ({}: Props) => {
         ) : state.trendingsError ? (
           <div className='col-span-full'>
             Erreur lors de la récupération des données.{' '}
-            <Button onClick={() => getTrendingCoins()}>Réessayer</Button>
+            <Button variant='link' className='p-0' onClick={() => getTrendingCoins()}>
+              Réessayer
+            </Button>
           </div>
         ) : (
           state.trendings.slice(0, 4).map(({ item }) => <TrendingCard item={item} key={item.id} />)

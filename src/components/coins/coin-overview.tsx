@@ -7,7 +7,7 @@ import { useCoins } from '@/hooks/use-coins'
 import { CoinDetails } from '@/types/coins'
 import { Badge } from '../ui/badge'
 import { CoinChart } from './coin-chart'
-import Image from 'next/image'
+import { CustomImage } from '../common/custom-image'
 
 interface CoinOverviewProps {
   coin: string
@@ -187,7 +187,7 @@ export const CoinOverview = ({
               <div className='space-y-6'>
                 <div className='flex items-center justify-between text-sm font-semibold'>
                   <div className='flex items-center justify-between space-x-1.5 dark:text-tokena-light-gray'>
-                    <Image
+                    <CustomImage
                       src={state.details.image.large}
                       width={32}
                       height={32}

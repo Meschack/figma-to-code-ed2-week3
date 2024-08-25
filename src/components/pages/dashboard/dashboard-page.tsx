@@ -3,24 +3,17 @@
 import { CoinOverview } from '@/components/coins/coin-overview'
 import { Icons } from '@/components/common/icons'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCoins } from '@/hooks/use-coins'
 import { cn } from '@/lib/utils'
-import { Category, Coin } from '@/types/coins'
+import { Coin } from '@/types/coins'
 import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { Trending } from './trending'
-import Image from 'next/image'
+import { CategorySelector } from './category-selector'
+import { SortOptionSelector } from './sort-option-selector'
+import { TableItemsLengthSelector } from './table-items-length-selector'
+import { CustomImage } from '@/components/common/custom-image'
 
 interface Props {
   coins: Coin[]
@@ -29,12 +22,9 @@ interface Props {
 interface State {
   selectedCoin?: string
   favoriteRows: string[]
-  categories?: Category[]
-  categoriesLoading: boolean
-  selectedCategory?: string
 }
 
-const _columns = [
+const columns = [
   { key: 'id', label: '#' },
   { key: 'coin', label: 'Coin' },
   { key: 'price', label: 'Price' },
@@ -44,7 +34,7 @@ const _columns = [
   { key: 'last_seven_days', label: 'Last seven days' }
 ] as const
 
-const sortingOptions = [
+export const sortingOptions = [
   { value: 'market_cap_asc', label: 'Market Cap Asc' },
   { value: 'market_cap_desc', label: 'Market Cap Desc' },
   { value: 'volume_asc', label: 'Volume Asc' },
@@ -54,10 +44,7 @@ const sortingOptions = [
 ] as const
 
 export const DashboardPage = ({ coins }: Props) => {
-  const [state, setState] = useState<State>({
-    favoriteRows: [],
-    categoriesLoading: true
-  })
+  const [state, setState] = useState<State>({ favoriteRows: [] })
 
   const [isUpdating, startTransition] = useTransition()
 
@@ -72,8 +59,6 @@ export const DashboardPage = ({ coins }: Props) => {
     { clearOnDefault: true, history: 'push', shallow: false, startTransition }
   )
 
-  const { getCategories } = useCoins()
-
   const onCoinClick = (coin?: string) => {
     setState(prev => ({ ...prev, selectedCoin: coin }))
   }
@@ -87,41 +72,19 @@ export const DashboardPage = ({ coins }: Props) => {
     }))
   }
 
-  const getCategoriesList = async (signal?: AbortSignal) => {
-    try {
-      setState(prev => ({ ...prev, categoriesLoading: true }))
-
-      const categories = await getCategories(signal)
-
-      setState(prev => ({ ...prev, categories, categoriesLoading: false }))
-    } catch (error) {
-      if (!signal?.aborted) {
-        setState(prev => ({ ...prev, categoriesLoading: false }))
-      }
-    }
-  }
-
   const onCategoryChange = (category: string) => {
     setSearchParams(prev => ({ ...prev, category: prev.category === category ? null : category }))
   }
 
-  const onItemsLengthChange = (length: number, checked: boolean) => {
-    setSearchParams(prev => ({ ...prev, items: checked ? length : 100 }))
+  const onItemsLengthChange = (length: string) => {
+    setSearchParams(prev => ({ ...prev, items: prev.items !== +length ? +length : 100 }))
   }
-  const onSortingOptionChange = (value: string) => {
+  const onSortingOptionChange = (value: string | undefined) => {
     setSearchParams(prev => ({
       ...prev,
       sort: prev.sort === value ? null : (value as NonNullable<typeof prev.sort>)
     }))
   }
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    getCategoriesList(controller.signal)
-
-    return () => controller.abort()
-  }, [])
 
   return (
     <>
@@ -130,53 +93,13 @@ export const DashboardPage = ({ coins }: Props) => {
 
         <div className='space-y-8'>
           <div className='flex items-center justify-between'>
-            <div className='flex items-center rounded-lg border ps-5'>
-              <Icons.search className='text-tokena-dark-gray' />
-              <Input
-                className='rounded-lg border-none outline-none ring-0'
-                placeholder='Search coin'
-              />
+            <div className='relative'>
+              <Input className='rounded-lg pl-8' placeholder='Search coin' />
+
+              <Icons.search className='absolute left-2 top-1/2 -translate-y-1/2 text-tokena-dark-gray' />
             </div>
 
-            {state.categoriesLoading ? (
-              <Skeleton className='h-10 w-36' />
-            ) : state.categories ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant='outline'>
-                    {searchParams.category
-                      ? state.categories.find(
-                          category => category.category_id === searchParams.category
-                        )?.name || 'Categories'
-                      : 'Categories'}
-                    <Icons.chevronUpDown className='ml-2 size-4 dark:text-tokena-light-gray' />
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuRadioGroup
-                    value={searchParams.category || undefined}
-                    onValueChange={onCategoryChange}
-                    className='no-scrollbar max-h-80 overflow-y-auto'
-                  >
-                    {state.categories.map(category => {
-                      return (
-                        <DropdownMenuRadioItem
-                          key={category.category_id}
-                          value={category.category_id}
-                        >
-                          {category.name}
-                        </DropdownMenuRadioItem>
-                      )
-                    })}
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button variant='link' onClick={() => getCategoriesList()}>
-                Réessayer
-              </Button>
-            )}
+            <CategorySelector value={searchParams.category} onCategoryChange={onCategoryChange} />
           </div>
 
           <div className='rounded-xl border border-tokena-gray dark:border-tokena-dark-gray'>
@@ -185,29 +108,10 @@ export const DashboardPage = ({ coins }: Props) => {
                 Market
               </span>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant='outline' size='icon'>
-                    <Icons.ellipsis className='dark:!text-tokena-light-gray' />
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuRadioGroup
-                    value={searchParams.category || undefined}
-                    onValueChange={onSortingOptionChange}
-                    className='no-scrollbar max-h-80 overflow-y-auto'
-                  >
-                    {sortingOptions.map(option => {
-                      return (
-                        <DropdownMenuRadioItem key={option.value} value={option.value}>
-                          {option.label}
-                        </DropdownMenuRadioItem>
-                      )
-                    })}
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <SortOptionSelector
+                onSortingOptionChange={onSortingOptionChange}
+                value={searchParams.sort}
+              />
             </header>
 
             <main className='no-scrollbar overflow-x-auto'>
@@ -216,12 +120,12 @@ export const DashboardPage = ({ coins }: Props) => {
                   <tr className='bg-tokena-light-gray *:px-6 *:py-3 *:text-left *:text-sm *:font-normal *:text-tokena-dark dark:bg-tokena-light-gray/10 *:dark:text-tokena-light-gray'>
                     <th id='empty-column-head'></th>
 
-                    {_columns.map((column, index) => (
+                    {columns.map((column, index) => (
                       <th
                         key={column.key}
                         className={cn(
                           'whitespace-nowrap',
-                          index === _columns.length - 1 && 'text-center'
+                          index === columns.length - 1 && 'text-center'
                         )}
                       >
                         {column.label}
@@ -261,7 +165,7 @@ export const DashboardPage = ({ coins }: Props) => {
                           </>
                         ) : (
                           <>
-                            <Image
+                            <CustomImage
                               src={coin.image}
                               alt={coin.name}
                               className='size-6'
@@ -329,27 +233,10 @@ export const DashboardPage = ({ coins }: Props) => {
 
               <div className='order-none w-full md:order-1 md:w-fit'>Pagination</div>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant='outline' className='order-last h-full'>
-                    Rows <Icons.chevronUpDown className='ml-2 size-4 dark:text-tokena-light-gray' />
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align='end'>
-                  {[50, 100, 150].map(length => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={length}
-                        checked={searchParams.items === length}
-                        onCheckedChange={value => onItemsLengthChange(length, value)}
-                      >
-                        {length}
-                      </DropdownMenuCheckboxItem>
-                    )
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <TableItemsLengthSelector
+                value={searchParams.items}
+                onItemsLengthChange={onItemsLengthChange}
+              />
             </div>
           </div>
         </div>

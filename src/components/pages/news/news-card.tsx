@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import marketplace from '@@/images/marketplace.png'
 import { Icons } from '@/components/common/icons'
 import { Button } from '@/components/ui/button'
 import { ComponentProps } from 'react'
+import { CustomImage } from '@/components/common/custom-image'
 
 interface Post {
   title: string
@@ -18,7 +18,13 @@ export const NewsCard = ({}: Props) => {
   return (
     <div className='space-y-2.5 rounded-xl border border-tokena-light-gray p-2.5 dark:border-tokena-gray/15 dark:bg-tokena-dark-blue-secondary'>
       <header className='flex items-stretch gap-2'>
-        <Image src={marketplace} alt='Marketplace logo' width={32} height={32} className='size-8' />
+        <CustomImage
+          src={marketplace}
+          alt='Marketplace logo'
+          width={32}
+          height={32}
+          className='size-8'
+        />
 
         <div className='*:text-xs'>
           <h4 className='mb-0 font-semibold text-tokena-dark dark:text-tokena-white'>
@@ -29,8 +35,6 @@ export const NewsCard = ({}: Props) => {
           </span>
         </div>
       </header>
-
-      {/* <CustomImage /> */}
 
       <main role='img' className='h-48 rounded-lg bg-tokena-light-gray dark:bg-[#1D1D1D]/70'></main>
 

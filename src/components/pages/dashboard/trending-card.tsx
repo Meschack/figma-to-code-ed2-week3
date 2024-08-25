@@ -1,7 +1,7 @@
+import { CustomImage } from '@/components/common/custom-image'
 import { Icons } from '@/components/common/icons'
 import { Badge } from '@/components/ui/badge'
 import { Trendings } from '@/types/trendings'
-import Image from 'next/image'
 
 interface Props {
   item: Trendings['coins'][number]['item']
@@ -12,7 +12,7 @@ export const TrendingCard = ({ item }: Props) => {
     <div className='cursor-pointer space-y-3 rounded-xl border border-tokena-light-gray p-3 hover:border-tokena-blue/20 hover:bg-tokena-blue/[7%] dark:border-tokena-dark-gray/15 dark:bg-tokena-dark-blue'>
       <div className='flex items-center justify-between'>
         <div className='flex grow items-center gap-1'>
-          <Image
+          <CustomImage
             src={item.large}
             alt={`${item.name} large image`}
             width={32}

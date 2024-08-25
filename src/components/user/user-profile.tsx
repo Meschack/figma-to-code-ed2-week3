@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import avatar from '@@/images/avatar.jpg'
 import { Icons } from '../common/icons'
 import { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
+import { CustomImage } from '../common/custom-image'
 
 interface Props extends ComponentProps<'button'> {}
 
@@ -15,7 +15,7 @@ export const UserProfile = ({ className, ...rest }: Props) => {
       )}
       {...rest}
     >
-      <Image
+      <CustomImage
         src={avatar}
         className='rounded-full'
         alt='User profile picture'
