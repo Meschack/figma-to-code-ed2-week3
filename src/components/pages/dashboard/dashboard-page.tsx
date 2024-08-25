@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils'
 import { Category, Coin } from '@/types/coins'
 import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
 import { useEffect, useState, useTransition } from 'react'
+import { Trending } from './trending'
 
 interface Props {
   coins: Coin[]
@@ -123,8 +124,8 @@ export const DashboardPage = ({ coins }: Props) => {
 
   return (
     <>
-      <div className='w-full'>
-        <div>Trendings</div>
+      <div className='w-full space-y-7 md:space-y-10'>
+        <Trending />
 
         <div className='space-y-8'>
           <div className='flex items-center justify-between'>

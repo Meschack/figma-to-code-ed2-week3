@@ -16,10 +16,6 @@ const COINS_LIST_MARKET_DATA = (category?: string, items?: number, sort?: string
 
   const orderString = sort ? `&order=${sort}` : ''
 
-  const url = `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd${categoryString}${orderString}${itemsString}&page=1`
-
-  console.log(url)
-
   return `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd${categoryString}${orderString}${itemsString}&page=1`
 }
 
@@ -31,4 +27,13 @@ const COIN_CHART_DATA = (id: string, days: number) =>
 
 const CATEGORIES = `${coinGeckoBaseUrl}/coins/categories/list`
 
-export { AIRDROPS_LIST, CATEGORIES, COINS_LIST_MARKET_DATA, COIN_DATA, COIN_CHART_DATA }
+const TRENDING_SEARCH = `${coinGeckoBaseUrl}/search/trending`
+
+export {
+  AIRDROPS_LIST,
+  CATEGORIES,
+  COIN_CHART_DATA,
+  COIN_DATA,
+  COINS_LIST_MARKET_DATA,
+  TRENDING_SEARCH
+}

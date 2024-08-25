@@ -123,7 +123,7 @@ export const CoinOverview = ({
   return (
     <div
       className={cn(
-        'absolute inset-0 flex max-h-screen w-screen justify-end bg-tokena-dark/30 p-5 transition-all duration-300 dark:bg-tokena-dark/60',
+        'fixed inset-0 z-50 flex max-h-screen w-screen justify-end bg-tokena-dark/30 p-5 transition-all duration-300 dark:bg-tokena-dark/60',
         open ? 'translate-x-0' : 'translate-x-full'
       )}
     >
