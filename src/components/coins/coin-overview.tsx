@@ -146,7 +146,7 @@ export const CoinOverview = ({
       <div
         ref={dialogRef}
         className={cn(
-          'flex h-full w-full flex-col gap-6 rounded-2xl bg-tokena-white p-5 dark:bg-tokena-dark-blue md:w-2/3 xl:w-1/3',
+          'flex h-full w-full flex-col gap-6 rounded-2xl bg-tokena-white p-5 dark:bg-tokena-dark-blue md:w-3/4 xl:w-2/5',
           state.error && 'items-center justify-center'
         )}
         role='dialog'

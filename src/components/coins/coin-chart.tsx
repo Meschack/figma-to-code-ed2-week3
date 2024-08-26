@@ -49,13 +49,34 @@ export const CoinChart = ({ data }: CoinChartProps) => {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={value => value.toLocaleString('en')}
+          tickFormatter={value =>
+            (value as number).toLocaleString('en', { currency: 'usd', maximumFractionDigits: 2 })
+          }
           domain={[minValue, maxValue]}
           ticks={[minValue, minValue + range / 3, minValue + (2 * range) / 3, maxValue]}
           tickCount={tickCount}
+          tickSize={-2}
         />
 
-        <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+        <ChartTooltip
+          cursor={false}
+          content={
+            <ChartTooltipContent
+              className='w-fit'
+              formatter={(value, name) => (
+                <>
+                  <span className='font-medium capitalize text-tokena-dark dark:text-tokena-dark-gray'>
+                    {name}
+                  </span>
+                  <span className='font-semibold text-tokena-dark dark:text-tokena-light-gray'>
+                    ${value.toLocaleString('en')}
+                  </span>
+                </>
+              )}
+              hideLabel
+            />
+          }
+        />
 
         <Line
           dataKey='average'
