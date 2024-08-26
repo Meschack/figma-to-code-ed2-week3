@@ -5,11 +5,15 @@ import { Trendings } from '@/types/trendings'
 
 interface Props {
   item: Trendings['coins'][number]['item']
+  onCardClick: (id: string) => void
 }
 
-export const TrendingCard = ({ item }: Props) => {
+export const TrendingCard = ({ item, onCardClick }: Props) => {
   return (
-    <div className='cursor-pointer space-y-3 rounded-xl border border-tokena-light-gray p-3 hover:border-tokena-blue/20 hover:bg-tokena-blue/[7%] dark:border-tokena-dark-gray/15 dark:bg-tokena-dark-blue'>
+    <div
+      onClick={() => onCardClick(item.id)}
+      className='cursor-pointer space-y-3 rounded-xl border border-tokena-light-gray p-3 hover:border-tokena-blue/20 hover:bg-tokena-blue/[7%] dark:border-tokena-dark-gray/15 dark:bg-tokena-dark-blue dark:hover:border-tokena-dark-gray/60'
+    >
       <div className='flex items-center justify-between'>
         <div className='flex grow items-center gap-1'>
           <CustomImage
@@ -21,7 +25,7 @@ export const TrendingCard = ({ item }: Props) => {
           />
 
           <div className='grid w-full font-bold'>
-            <h3 className='text-xs font-bold text-tokena-dark-gray dark:text-tokena-white'>
+            <h3 className='block truncate text-xs font-bold text-tokena-dark-gray dark:text-tokena-white'>
               {item.name}
             </h3>
             <span className='text-xxs uppercase text-tokena-dark-gray/60 dark:text-tokena-gray'>

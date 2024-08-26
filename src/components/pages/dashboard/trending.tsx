@@ -1,5 +1,3 @@
-interface Props {}
-
 import { Button } from '@/components/ui/button'
 import { TRENDING_SEARCH } from '@/config/api/urls'
 import { fetcher } from '@/lib/fetcher'
@@ -9,13 +7,17 @@ import { TrendingCard } from './trending-card'
 import { TrendingCardLoading } from './trending-card-loading'
 import { Icons } from '@/components/common/icons'
 
+interface Props {
+  onCardClick: (id: string) => void
+}
+
 interface State {
   trendings: Trendings['coins']
   trendingsLoading: boolean
   trendingsError?: boolean
 }
 
-export const Trending = ({}: Props) => {
+export const Trending = ({ onCardClick }: Props) => {
   const [state, setState] = useState<State>({ trendingsLoading: true, trendings: [] })
 
   const getTrendingCoins = async (signal?: AbortSignal) => {
@@ -66,7 +68,9 @@ export const Trending = ({}: Props) => {
             </Button>
           </div>
         ) : (
-          state.trendings.slice(0, 4).map(({ item }) => <TrendingCard item={item} key={item.id} />)
+          state.trendings
+            .slice(0, 4)
+            .map(({ item }) => <TrendingCard onCardClick={onCardClick} item={item} key={item.id} />)
         )}
       </div>
     </div>

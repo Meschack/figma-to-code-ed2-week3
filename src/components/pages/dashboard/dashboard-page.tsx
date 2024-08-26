@@ -89,12 +89,12 @@ export const DashboardPage = ({ coins }: Props) => {
   return (
     <>
       <div className='w-full space-y-7 md:space-y-10'>
-        <Trending />
+        <Trending onCardClick={onCoinClick} />
 
         <div className='space-y-8'>
           <div className='flex items-center justify-between'>
             <div className='relative'>
-              <Input className='rounded-lg pl-8' placeholder='Search coin' />
+              <Input className='w-80 pl-8' placeholder='Search coin' />
 
               <Icons.search className='absolute left-2 top-1/2 -translate-y-1/2 text-tokena-dark-gray' />
             </div>
