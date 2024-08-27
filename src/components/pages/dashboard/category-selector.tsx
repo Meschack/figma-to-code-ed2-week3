@@ -50,13 +50,13 @@ export const CategorySelector = ({ value, onCategoryChange }: Props) => {
   }, [])
 
   return state.categoriesLoading ? (
-    <Skeleton className='h-10 w-[234px]' />
+    <Skeleton className='h-10 w-full md:w-[234px]' />
   ) : state.categories ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant='outline'
-          className='relative block w-[234px] truncate px-5 py-2.5 text-start'
+          className='relative block w-full truncate px-5 py-2.5 text-start md:w-[234px]'
         >
           {value
             ? state.categories.find(category => category.category_id === value)?.name ||
@@ -66,7 +66,7 @@ export const CategorySelector = ({ value, onCategoryChange }: Props) => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align='end' className='h-[172px] w-[234px] p-1.5'>
+      <DropdownMenuContent align='center' className='h-[172px] w-full p-1.5 md:w-[234px]'>
         <DropdownMenuRadioGroup
           value={value || undefined}
           onValueChange={onCategoryChange}

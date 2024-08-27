@@ -14,6 +14,7 @@ import { CategorySelector } from './category-selector'
 import { SortOptionSelector } from './sort-option-selector'
 import { TableItemsLengthSelector } from './table-items-length-selector'
 import { CustomImage } from '@/components/common/custom-image'
+import { useSidebarStore } from '@/components/layout/mobile-menu'
 
 interface Props {
   coins: Coin[]
@@ -45,6 +46,7 @@ export const sortingOptions = [
 
 export const DashboardPage = ({ coins }: Props) => {
   const [state, setState] = useState<State>({ favoriteRows: [] })
+  const { isOpen: sidebarIsOpen } = useSidebarStore()
 
   const [isUpdating, startTransition] = useTransition()
 
@@ -86,16 +88,23 @@ export const DashboardPage = ({ coins }: Props) => {
     }))
   }
 
+  console.log(coins)
+
   return (
     <>
       <div className='w-full space-y-7 md:space-y-10'>
         <Trending onCardClick={onCoinClick} />
 
         <div className='space-y-8'>
-          <div className='flex items-center justify-between'>
-            <div className='relative'>
-              <Input className='w-80 pl-8' placeholder='Search coin' />
-
+          <div className='flex flex-col items-center justify-between gap-4 md:flex-row md:items-start'>
+            <div
+              className={cn(
+                'relative z-[0] w-full md:w-80',
+                /* Avoid to have the input component placed after the sidebar when this is not closed */
+                sidebarIsOpen && '-z-10'
+              )}
+            >
+              <Input className='pl-8' placeholder='Search coin' />
               <Icons.search className='absolute left-2 top-1/2 -translate-y-1/2 text-tokena-dark-gray' />
             </div>
 

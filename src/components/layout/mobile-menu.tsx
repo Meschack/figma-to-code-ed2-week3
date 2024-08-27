@@ -1,30 +1,41 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { Sidebar } from './sidebar'
 import { Button } from '../ui/button'
 import { Icons } from '../common/icons'
+import { create } from 'zustand'
+
+interface SidebarStore {
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
+}
+
+export const useSidebarStore = create<SidebarStore>(set => ({
+  isOpen: false,
+  setIsOpen: isOpen => set({ isOpen })
+}))
 
 export const MobileMenu = () => {
-  const [open, setOpen] = useState(false)
+  const { isOpen, setIsOpen } = useSidebarStore()
   const sidebarRef = useRef<HTMLDivElement>(null)
 
-  const triggerMenu = () => setOpen(prev => !prev)
+  const triggerMenu = () => setIsOpen(!isOpen)
 
   const handleOutsideClick = useCallback((event: MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-      setOpen(false)
+      setIsOpen(false)
     }
   }, [])
 
   const handleEscapeKey = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && open) {
-        setOpen(false)
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false)
       }
     },
-    [open]
+    [isOpen]
   )
 
   useEffect(() => {
@@ -37,7 +48,7 @@ export const MobileMenu = () => {
     document.addEventListener('keydown', handleEscapeKey)
 
     return () => document.removeEventListener('keydown', handleEscapeKey)
-  }, [open])
+  }, [isOpen])
 
   return (
     <div className='xl:hidden'>
@@ -54,23 +65,18 @@ export const MobileMenu = () => {
       <div
         className={cn(
           'fixed inset-0 z-10 h-screen w-screen bg-tokena-dark/30 dark:bg-tokena-dark/60',
-          open ? 'block' : 'hidden'
+          isOpen ? 'block' : 'hidden'
         )}
       ></div>
 
       <div
         ref={sidebarRef}
         className={cn(
-          'fixed inset-0 z-20 h-full w-fit transition-all duration-300 ease-out',
-          open ? 'translate-x-0' : '-translate-x-full'
+          'absolute inset-0 z-20 h-full w-fit transition-all duration-300 ease-out',
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className='h-full w-60'>
-          <Sidebar
-            onLinkClicked={triggerMenu}
-            className='bg-tokena-white dark:bg-tokena-dark-blue'
-          />
-        </div>
+        <Sidebar onLinkClicked={triggerMenu} className='' />
       </div>
     </div>
   )

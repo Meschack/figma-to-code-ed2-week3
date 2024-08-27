@@ -18,7 +18,7 @@ export const Header = ({ className, ...rest }: Props) => (
     <div className='flex items-center gap-4 md:gap-6'>
       <MobileMenu />
 
-      <div className='flex flex-col font-medium'>
+      <div className='grid font-medium'>
         <span className='text-sm text-tokena-dark dark:text-tokena-light-gray'>Dashboard</span>
         <span className='text-xs text-tokena-dark-gray dark:text-tokena-gray'>
           Welcome back, John Doe

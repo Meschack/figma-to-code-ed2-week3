@@ -1,7 +1,7 @@
 import notFound from '@@/icons/not-found.svg'
 import { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
-import { CustomImage } from './custom-image'
+import Image from 'next/image'
 
 interface Props extends ComponentProps<'div'> {
   title?: string
@@ -12,7 +12,7 @@ interface Props extends ComponentProps<'div'> {
 
 export const ErrorComponent = ({ description, label, title, to, className, ...rest }: Props) => (
   <div className={cn('mx-auto flex flex-col items-center gap-10', className)} {...rest}>
-    <CustomImage
+    <Image
       alt='Not found illustration'
       width={400}
       height={400}
