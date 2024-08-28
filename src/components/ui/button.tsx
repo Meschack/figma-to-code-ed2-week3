@@ -17,7 +17,9 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         transparent:
-          'bg-transparent rounded-none border-none text-tokena-dark [&>svg]:text-tokena-dark dark:text-tokena-white dark:[&>svg]:text-tokena-white'
+          'bg-transparent rounded-none border-none text-tokena-dark [&>svg]:text-tokena-dark dark:text-tokena-white dark:[&>svg]:text-tokena-white',
+        primary:
+          'w-full gap-1.5 bg-tokena-blue/[6%] font-medium text-tokena-blue hover:text-tokena-white hover:bg-tokena-blue [&>svg]:text-tokena-blue [&>svg]:hover:text-tokena-white'
       },
       size: {
         default: 'h-10 px-5 py-2.5',

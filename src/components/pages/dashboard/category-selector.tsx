@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCoins } from '@/hooks/use-coins'
-import { useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
+import { useState, useEffect, ComponentProps } from 'react'
 
-interface Props {
-  value: string | null
+interface Props extends ComponentProps<typeof Button> {
+  current: string | null
   onCategoryChange: (value: string) => void
 }
 
@@ -22,7 +23,7 @@ interface State {
   categoriesError?: boolean
 }
 
-export const CategorySelector = ({ value, onCategoryChange }: Props) => {
+export const CategorySelector = ({ current, onCategoryChange, className, ...rest }: Props) => {
   const [state, setState] = useState<State>({ categoriesLoading: true, categories: [] })
 
   const { getCategories } = useCoins()
@@ -56,10 +57,13 @@ export const CategorySelector = ({ value, onCategoryChange }: Props) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant='outline'
-          className='relative block w-full truncate px-5 py-2.5 text-start md:w-[234px]'
+          className={cn(
+            'relative block w-full truncate px-5 py-2.5 text-start md:w-[234px]',
+            className
+          )}
         >
-          {value
-            ? state.categories.find(category => category.category_id === value)?.name ||
+          {current
+            ? state.categories.find(category => category.category_id === current)?.name ||
               'Categories'
             : 'Categories'}
           <Icons.chevronUpDown className='absolute right-2 top-1/2 size-4 -translate-y-1/2 dark:text-tokena-light-gray' />
@@ -68,7 +72,7 @@ export const CategorySelector = ({ value, onCategoryChange }: Props) => {
 
       <DropdownMenuContent align='center' className='h-[172px] w-full p-1.5 md:w-[234px]'>
         <DropdownMenuRadioGroup
-          value={value || undefined}
+          value={current || undefined}
           onValueChange={onCategoryChange}
           className='no-scrollbar max-h-80 overflow-y-auto'
         >

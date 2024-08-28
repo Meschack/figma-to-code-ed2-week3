@@ -2,6 +2,7 @@ import notFound from '@@/icons/not-found.svg'
 import { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import { Button } from '../ui/button'
 
 interface Props extends ComponentProps<'div'> {
   title?: string
@@ -30,12 +31,11 @@ export const ErrorComponent = ({ description, label, title, to, className, ...re
         {description ?? "The page you're looking for have been moved, deleted or don't exist."}
       </p>
 
-      <a
-        className='w-fit rounded-md border border-neutral-800 px-6 py-3 font-medium text-neutral-800 hover:bg-neutral-800 hover:text-white hover:!no-underline'
-        href={to ?? '/'}
-      >
-        {label ?? 'Come back'}
-      </a>
+      <Button variant='primary' asChild>
+        <a className='' href={to ?? '/'}>
+          {label ?? 'Come back'}
+        </a>
+      </Button>
     </div>
   </div>
 )

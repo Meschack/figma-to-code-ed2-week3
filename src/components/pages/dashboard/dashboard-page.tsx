@@ -15,6 +15,7 @@ import { SortOptionSelector } from './sort-option-selector'
 import { TableItemsLengthSelector } from './table-items-length-selector'
 import { CustomImage } from '@/components/common/custom-image'
 import { useSidebarStore } from '@/components/layout/mobile-menu'
+import { Button } from '@/components/ui/button'
 
 interface Props {
   coins: Coin[]
@@ -88,12 +89,45 @@ export const DashboardPage = ({ coins }: Props) => {
     }))
   }
 
-  console.log(coins)
-
   return (
     <>
       <div className='w-full space-y-7 md:space-y-10'>
-        <Trending onCardClick={onCoinClick} />
+        <div className='grid gap-5 xl:grid-cols-4'>
+          <div className='w-full space-y-2 rounded-xl border p-4'>
+            <div className='space-y-1.5'>
+              <h3 className='text-lg font-semibold text-tokena-dark dark:text-tokena-gray'>
+                Balance
+              </h3>
+
+              <div className='grid grid-cols-2 gap-1.5'>
+                <span className='text-lg font-bold text-tokena-dark dark:text-tokena-light-gray'>
+                  $63,755,200
+                </span>
+
+                <div className='flex items-center gap-1.5'>
+                  <Badge variant='success'>+2.3%</Badge>
+                  <span className='text-xs font-medium text-tokena-dark-gray dark:text-tokena-gray'>
+                    vs last month
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-1.5'>
+              <Button variant='primary'>
+                <Icons.arrowUp />
+                <span>Deposit</span>
+              </Button>
+
+              <Button variant='primary'>
+                <Icons.arrowDown />
+                <span>Withdraw</span>
+              </Button>
+            </div>
+          </div>
+
+          <Trending handleCardClick={onCoinClick} className='xl:col-span-3' />
+        </div>
 
         <div className='space-y-8'>
           <div className='flex flex-col items-center justify-between gap-4 md:flex-row md:items-start'>
@@ -108,7 +142,11 @@ export const DashboardPage = ({ coins }: Props) => {
               <Icons.search className='absolute left-2 top-1/2 -translate-y-1/2 text-tokena-dark-gray' />
             </div>
 
-            <CategorySelector value={searchParams.category} onCategoryChange={onCategoryChange} />
+            <CategorySelector
+              className={cn(sidebarIsOpen && '-z-10')}
+              current={searchParams.category}
+              onCategoryChange={onCategoryChange}
+            />
           </div>
 
           <div className='rounded-xl border border-tokena-gray dark:border-tokena-dark-gray'>

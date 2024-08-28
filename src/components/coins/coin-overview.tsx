@@ -280,18 +280,11 @@ export const CoinOverview = ({
                   </div>
 
                   <Button
+                    variant='primary'
                     onClick={onFavoriteStateToggle}
-                    className={cn(
-                      'group w-full gap-1.5 bg-tokena-blue/[6%] font-medium text-tokena-blue hover:text-tokena-white',
-                      isFavorite && 'bg-tokena-blue text-tokena-white'
-                    )}
+                    className={cn(isFavorite && 'bg-tokena-blue text-tokena-white')}
                   >
-                    <Icons.star
-                      className={cn(
-                        'size-4.5 !text-tokena-blue group-hover:!text-tokena-white',
-                        isFavorite && '!text-tokena-white'
-                      )}
-                    />
+                    <Icons.star className={cn('size-4.5', isFavorite && '!text-tokena-white')} />
                     <span>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</span>
                   </Button>
                 </div>

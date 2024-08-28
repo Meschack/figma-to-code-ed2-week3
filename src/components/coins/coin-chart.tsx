@@ -20,7 +20,7 @@ interface CoinChartProps {
 
 const CustomizedLegend = () => (
   <div className='ms-14 mt-4 flex items-center gap-2'>
-    <div className='h-2 w-8 bg-[var(--tokena-green)]'></div>
+    <div className='h-2 w-8 bg-tokena-green'></div>
     <span className='text-xs text-tokena-dark-gray'>Price</span>
   </div>
 )

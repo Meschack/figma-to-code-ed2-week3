@@ -38,7 +38,7 @@ export const Sidebar = ({ className, onLinkClicked, ...rest }: Props) => {
   return (
     <aside
       className={cn(
-        'sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r bg-tokena-white px-3.5 py-4 dark:bg-tokena-dark-blue',
+        'no-scrollbar sticky flex h-screen w-60 shrink-0 flex-col gap-9 overflow-auto border-r bg-tokena-white px-3.5 py-4 dark:bg-tokena-dark-blue',
         className
       )}
       {...rest}

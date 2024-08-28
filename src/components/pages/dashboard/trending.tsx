@@ -2,13 +2,14 @@ import { Button } from '@/components/ui/button'
 import { TRENDING_SEARCH } from '@/config/api/urls'
 import { fetcher } from '@/lib/fetcher'
 import { Trendings } from '@/types/trendings'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ComponentProps } from 'react'
 import { TrendingCard } from './trending-card'
 import { TrendingCardLoading } from './trending-card-loading'
 import { Icons } from '@/components/common/icons'
+import { cn } from '@/lib/utils'
 
-interface Props {
-  onCardClick: (id: string) => void
+interface Props extends ComponentProps<'div'> {
+  handleCardClick: (id: string) => void
 }
 
 interface State {
@@ -17,7 +18,7 @@ interface State {
   trendingsError?: boolean
 }
 
-export const Trending = ({ onCardClick }: Props) => {
+export const Trending = ({ handleCardClick, className, ...rest }: Props) => {
   const [state, setState] = useState<State>({ trendingsLoading: true, trendings: [] })
 
   const getTrendingCoins = async (signal?: AbortSignal) => {
@@ -43,7 +44,7 @@ export const Trending = ({ onCardClick }: Props) => {
   }, [])
 
   return (
-    <div className='space-y-3'>
+    <div className={cn('space-y-3', className)}>
       <div className='flex items-center justify-between'>
         <h2 className='text-base font-semibold text-tokena-dark dark:text-tokena-white'>
           Trending
@@ -70,7 +71,9 @@ export const Trending = ({ onCardClick }: Props) => {
         ) : (
           state.trendings
             .slice(0, 4)
-            .map(({ item }) => <TrendingCard onCardClick={onCardClick} item={item} key={item.id} />)
+            .map(({ item }) => (
+              <TrendingCard handleCardClick={handleCardClick} item={item} key={item.id} />
+            ))
         )}
       </div>
     </div>
