@@ -2,6 +2,13 @@ import { CATEGORIES, COIN_CHART_DATA, COIN_DATA } from '@/config/api/urls'
 import { fetcher } from '@/lib/fetcher'
 import { Category, CoinDetails } from '@/types/coins'
 
+interface CoinDataGetterParams {
+  id: string
+  days: number
+  signal?: AbortSignal
+  currency: string | undefined
+}
+
 export const useCoins = () => {
   const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY
 
@@ -16,12 +23,12 @@ export const useCoins = () => {
     return response.data
   }
 
-  const getCoinChartData = async (id: string, days: number = 7, signal?: AbortSignal) => {
+  const getCoinChartData = async ({ id, days, signal, currency }: CoinDataGetterParams) => {
     if (!apiKey) throw new Error('Missing API key')
 
     const response = await fetcher.get<
       Record<'prices' | 'market_caps' | 'total_volumes', Array<number[]>>
-    >(COIN_CHART_DATA(id, days), {
+    >(COIN_CHART_DATA(id, days || 7, currency), {
       headers: { 'x-cg-demo-api-key': apiKey },
       signal
     })

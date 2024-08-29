@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button'
 
 interface Props {
   coins: Coin[]
+  currency: string
 }
 
 interface State {
@@ -45,7 +46,7 @@ export const sortingOptions = [
   { value: 'id_desc', label: 'ID Desc' }
 ] as const
 
-export const DashboardPage = ({ coins }: Props) => {
+export const DashboardPage = ({ coins, currency }: Props) => {
   const [state, setState] = useState<State>({ favoriteRows: [] })
   const { isOpen: sidebarIsOpen } = useSidebarStore()
 
@@ -82,6 +83,7 @@ export const DashboardPage = ({ coins }: Props) => {
   const onItemsLengthChange = (length: string) => {
     setSearchParams(prev => ({ ...prev, items: prev.items !== +length ? +length : 100 }))
   }
+
   const onSortingOptionChange = (value: string | undefined) => {
     setSearchParams(prev => ({
       ...prev,
@@ -100,7 +102,7 @@ export const DashboardPage = ({ coins }: Props) => {
               </h3>
 
               <div className='grid grid-cols-2 gap-1.5'>
-                <span className='text-lg font-bold text-tokena-dark dark:text-tokena-light-gray'>
+                <span className='text-lg font-bold uppercase text-tokena-dark dark:text-tokena-light-gray'>
                   $63,755,200
                 </span>
 
@@ -126,7 +128,7 @@ export const DashboardPage = ({ coins }: Props) => {
             </div>
           </div>
 
-          <Trending handleCardClick={onCoinClick} className='xl:col-span-3' />
+          <Trending currency={currency} handleCardClick={onCoinClick} className='xl:col-span-3' />
         </div>
 
         <div className='space-y-8'>
@@ -185,7 +187,7 @@ export const DashboardPage = ({ coins }: Props) => {
                   {coins.map((coin, index) => (
                     <tr
                       key={coin.id}
-                      className='border-b *:space-x-2.5 *:px-6 *:py-3 *:text-left *:font-medium *:text-tokena-dark hover:bg-tokena-light-gray *:dark:text-tokena-light-gray hover:dark:bg-tokena-dark-blue-secondary'
+                      className='border-b *:space-x-2.5 *:whitespace-nowrap *:px-6 *:py-3 *:text-left *:font-medium *:uppercase *:text-tokena-dark hover:bg-tokena-light-gray *:dark:text-tokena-light-gray hover:dark:bg-tokena-dark-blue-secondary'
                     >
                       <td className='cursor-pointer' onClick={() => handleColumnSelect(coin.id)}>
                         <Icons.star
@@ -296,6 +298,7 @@ export const DashboardPage = ({ coins }: Props) => {
           onOpenChange={() => onCoinClick()}
           isFavorite={state.favoriteRows.includes(state.selectedCoin)}
           onFavoriteStateToggle={() => handleColumnSelect(state.selectedCoin!)}
+          currency={currency || 'usd'}
         />
       )}
     </>

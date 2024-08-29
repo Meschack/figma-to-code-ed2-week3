@@ -1,4 +1,5 @@
 import { getList } from '@/actions/coins'
+import { getCurrentCurrency } from '@/actions/currencies'
 import { ErrorComponent } from '@/components/common/error'
 import { DashboardPage } from '@/components/pages/dashboard/dashboard-page'
 import { createSearchParamsCache, parseAsInteger, parseAsString } from 'nuqs/server'
@@ -17,9 +18,11 @@ const Page = async ({ searchParams }: Props) => {
   const { category, items, sort } = searchParamsCache.parse(searchParams)
 
   try {
-    const response = await getList(category || undefined, items, sort)
+    const currency = await getCurrentCurrency()
 
-    return <DashboardPage coins={response} />
+    const response = await getList(category || undefined, items, sort, currency)
+
+    return <DashboardPage currency={currency || 'usd'} coins={response} />
   } catch (error) {
     return (
       <ErrorComponent

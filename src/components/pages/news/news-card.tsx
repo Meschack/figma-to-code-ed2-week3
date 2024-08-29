@@ -4,15 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ComponentProps } from 'react'
 import { CustomImage } from '@/components/common/custom-image'
 
-interface Post {
-  title: string
-  image: string
-  description: string
-}
-
-interface Props extends ComponentProps<'div'> {
-  //   post: Post
-}
+interface Props extends ComponentProps<'div'> {}
 
 export const NewsCard = ({}: Props) => {
   return (
@@ -36,7 +28,10 @@ export const NewsCard = ({}: Props) => {
         </div>
       </header>
 
-      <main role='img' className='h-48 rounded-lg bg-tokena-light-gray dark:bg-[#1D1D1D]/70'></main>
+      <main
+        role='img'
+        className='aspect-video w-full rounded-lg bg-tokena-light-gray dark:bg-tokena-dark/70'
+      ></main>
 
       <footer className='space-y-2'>
         <div className='space-y-1.5 *:text-xs'>

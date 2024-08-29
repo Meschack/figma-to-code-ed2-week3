@@ -17,6 +17,7 @@ interface CoinOverviewProps {
   open: boolean
   isFavorite: boolean
   onFavoriteStateToggle: () => void
+  currency: string
 }
 
 export interface CoinOverviewState {
@@ -33,7 +34,8 @@ export const CoinOverview = ({
   onOpenChange,
   open,
   isFavorite,
-  onFavoriteStateToggle
+  onFavoriteStateToggle,
+  currency
 }: CoinOverviewProps) => {
   const [state, setState] = useState<CoinOverviewState>({ loading: true })
 
@@ -61,7 +63,7 @@ export const CoinOverview = ({
     try {
       setState(prev => ({ ...prev, chartDataLoading: true, chartDataError: false }))
 
-      const details = await getCoinChartData(coin, 180, signal)
+      const details = await getCoinChartData({ id: coin, days: 180, signal, currency })
 
       // Récupérer le prix total pour chaque occurence de trente jours
 
@@ -172,7 +174,7 @@ export const CoinOverview = ({
                 {state.chartDataLoading ? (
                   <Skeleton className='h-56 w-full' />
                 ) : state.chartData ? (
-                  <CoinChart data={state.chartData} />
+                  <CoinChart currency={currency} data={state.chartData} />
                 ) : (
                   <FetchingErrorAlert
                     title='Erreur lors de la récupération des statistiques.'
@@ -187,7 +189,7 @@ export const CoinOverview = ({
                         src={state.details.image.large}
                         width={32}
                         height={32}
-                        className='size-8'
+                        className='size-8 rounded-full'
                         alt={`${state.details.name}'s image`}
                       />
 
@@ -196,9 +198,9 @@ export const CoinOverview = ({
                       </span>
                     </div>
 
-                    <span className='text-sm font-semibold'>
-                      {'usd' in state.details.market_data.current_price ? (
-                        `$${state.details.market_data.current_price['usd']}`
+                    <span className='text-sm font-semibold uppercase'>
+                      {currency in state.details.market_data.current_price ? (
+                        `${currency} ${state.details.market_data.current_price[currency]}`
                       ) : (
                         <Skeleton className='h-5 w-14' />
                       )}
@@ -221,9 +223,9 @@ export const CoinOverview = ({
                       <span className='text-tokena-dark dark:text-tokena-light-gray'>
                         Market cap
                       </span>
-                      <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                        {'usd' in state.details.market_data.market_cap ? (
-                          `$${state.details.market_data.market_cap['usd']}`
+                      <span className='uppercase text-tokena-dark-gray dark:text-tokena-gray'>
+                        {currency in state.details.market_data.market_cap ? (
+                          `${currency} ${state.details.market_data.market_cap[currency]}`
                         ) : (
                           <Skeleton className='h-5 w-14' />
                         )}
@@ -244,9 +246,9 @@ export const CoinOverview = ({
                         24 Hour High
                       </span>
 
-                      <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                        {'usd' in state.details.market_data.high_24h ? (
-                          `$${state.details.market_data.high_24h['usd']}`
+                      <span className='uppercase text-tokena-dark-gray dark:text-tokena-gray'>
+                        {currency in state.details.market_data.high_24h ? (
+                          `${currency} ${state.details.market_data.high_24h[currency]}`
                         ) : (
                           <Skeleton className='h-5 w-14' />
                         )}
@@ -256,9 +258,9 @@ export const CoinOverview = ({
                       <span className='text-tokena-dark dark:text-tokena-light-gray'>
                         24 Hour Low
                       </span>
-                      <span className='text-tokena-dark-gray dark:text-tokena-gray'>
-                        {'usd' in state.details.market_data.low_24h ? (
-                          `$${state.details.market_data.low_24h['usd']}`
+                      <span className='uppercase text-tokena-dark-gray dark:text-tokena-gray'>
+                        {currency in state.details.market_data.low_24h ? (
+                          `${currency} ${state.details.market_data.low_24h[currency]}`
                         ) : (
                           <Skeleton className='h-5 w-14' />
                         )}

@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes'
 
 import { Button } from '@/components/ui/button'
-import { Icons } from './common/icons'
+import { Icons } from '../common/icons'
 
 export const ModeToggle = () => {
   const { setTheme, theme } = useTheme()

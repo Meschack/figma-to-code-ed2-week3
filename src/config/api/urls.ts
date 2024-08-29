@@ -9,31 +9,39 @@ const AIRDROPS_LIST = (start: number = 1, limit: number = 8) =>
 
 // COINGECKO
 
-const COINS_LIST_MARKET_DATA = (category?: string, items?: number, sort?: string) => {
+const COINS_LIST_MARKET_DATA = (
+  category?: string,
+  items?: number,
+  sort?: string,
+  currency: string = 'usd'
+) => {
   const categoryString = category ? `&category=${category}` : ''
 
   const itemsString = items ? `&per_page=${items}` : ''
 
   const orderString = sort ? `&order=${sort}` : ''
 
-  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=usd${categoryString}${orderString}${itemsString}&page=1`
+  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=${currency}${categoryString}${orderString}${itemsString}&page=1`
 }
 
 const COIN_DATA = (id: string) =>
   `${coinGeckoBaseUrl}/coins/${id}?localization=false&tickers=false&community_data=false&developer_data=false`
 
-const COIN_CHART_DATA = (id: string, days: number) =>
-  `${coinGeckoBaseUrl}/coins/${id}/market_chart?vs_currency=usd&days=${days}&interval=daily`
+const COIN_CHART_DATA = (id: string, days: number, currency: string = 'usd') =>
+  `${coinGeckoBaseUrl}/coins/${id}/market_chart?vs_currency=${currency}&days=${days}&interval=daily`
 
 const CATEGORIES = `${coinGeckoBaseUrl}/coins/categories/list`
 
 const TRENDING_SEARCH = `${coinGeckoBaseUrl}/search/trending`
 
+const CURRENCIES_LIST = `${coinGeckoBaseUrl}/simple/supported_vs_currencies`
+
 export {
-  AIRDROPS_LIST,
   CATEGORIES,
+  CURRENCIES_LIST,
+  TRENDING_SEARCH,
+  AIRDROPS_LIST,
   COIN_CHART_DATA,
   COIN_DATA,
-  COINS_LIST_MARKET_DATA,
-  TRENDING_SEARCH
+  COINS_LIST_MARKET_DATA
 }

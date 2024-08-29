@@ -6,9 +6,10 @@ import { Trendings } from '@/types/trendings'
 interface Props {
   item: Trendings['coins'][number]['item']
   handleCardClick: (id: string) => void
+  currency: string
 }
 
-export const TrendingCard = ({ item, handleCardClick }: Props) => (
+export const TrendingCard = ({ item, handleCardClick, currency }: Props) => (
   <div
     onClick={() => handleCardClick(item.id)}
     className='cursor-pointer space-y-3 rounded-xl border border-tokena-light-gray p-3 hover:border-tokena-blue/20 hover:bg-tokena-blue/[7%] dark:border-tokena-dark-gray/15 dark:bg-tokena-dark-blue dark:hover:border-tokena-dark-gray/60'
@@ -34,11 +35,15 @@ export const TrendingCard = ({ item, handleCardClick }: Props) => (
       </div>
 
       <Badge
-        variant={item.data.price_change_percentage_24h['usd'] > 0 ? 'success' : 'destructive'}
+        variant={item.data.price_change_percentage_24h[currency] > 0 ? 'success' : 'destructive'}
         size='sm'
       >
-        {item.data.price_change_percentage_24h['usd'].toFixed(2)}%
-        {item.data.price_change_percentage_24h['usd'] > 0 ? <Icons.tradeUp /> : <Icons.tradeDown />}
+        {item.data.price_change_percentage_24h[currency].toFixed(2)}%
+        {item.data.price_change_percentage_24h[currency] > 0 ? (
+          <Icons.tradeUp />
+        ) : (
+          <Icons.tradeDown />
+        )}
       </Badge>
     </div>
 

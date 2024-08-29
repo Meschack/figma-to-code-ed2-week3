@@ -16,6 +16,7 @@ const chartConfig = {
 
 interface CoinChartProps {
   data: Required<CoinOverviewState['chartData']>
+  currency: string
 }
 
 const CustomizedLegend = () => (
@@ -25,7 +26,7 @@ const CustomizedLegend = () => (
   </div>
 )
 
-export const CoinChart = ({ data }: CoinChartProps) => {
+export const CoinChart = ({ data, currency }: CoinChartProps) => {
   const maxValue = Math.max(...data!.map(item => item.average))
   const minValue = Math.min(...data!.map(item => item.average))
   const range = maxValue - minValue
@@ -36,13 +37,7 @@ export const CoinChart = ({ data }: CoinChartProps) => {
       <LineChart accessibilityLayer data={data}>
         <CartesianGrid />
 
-        <XAxis
-          dataKey='label'
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={value => value.slice(0, 3)}
-        />
+        <XAxis dataKey='label' tickLine={false} axisLine={false} tickMargin={8} />
 
         <YAxis
           dataKey='average'
@@ -50,7 +45,7 @@ export const CoinChart = ({ data }: CoinChartProps) => {
           axisLine={false}
           tickMargin={8}
           tickFormatter={value =>
-            (value as number).toLocaleString('en', { currency: 'usd', maximumFractionDigits: 2 })
+            (value as number).toLocaleString('en', { currency, maximumFractionDigits: 2 })
           }
           domain={[minValue, maxValue]}
           ticks={[minValue, minValue + range / 3, minValue + (2 * range) / 3, maxValue]}
@@ -68,8 +63,8 @@ export const CoinChart = ({ data }: CoinChartProps) => {
                   <span className='font-medium capitalize text-tokena-dark dark:text-tokena-dark-gray'>
                     {name}
                   </span>
-                  <span className='font-semibold text-tokena-dark dark:text-tokena-light-gray'>
-                    ${value.toLocaleString('en')}
+                  <span className='font-semibold uppercase text-tokena-dark dark:text-tokena-light-gray'>
+                    {currency} {value.toLocaleString('en')}
                   </span>
                 </>
               )}

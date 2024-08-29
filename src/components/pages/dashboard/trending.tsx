@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 
 interface Props extends ComponentProps<'div'> {
   handleCardClick: (id: string) => void
+  currency: string
 }
 
 interface State {
@@ -18,7 +19,7 @@ interface State {
   trendingsError?: boolean
 }
 
-export const Trending = ({ handleCardClick, className, ...rest }: Props) => {
+export const Trending = ({ handleCardClick, className, currency, ...rest }: Props) => {
   const [state, setState] = useState<State>({ trendingsLoading: true, trendings: [] })
 
   const getTrendingCoins = async (signal?: AbortSignal) => {
@@ -44,7 +45,7 @@ export const Trending = ({ handleCardClick, className, ...rest }: Props) => {
   }, [])
 
   return (
-    <div className={cn('space-y-3', className)}>
+    <div className={cn('space-y-3', className)} {...rest}>
       <div className='flex items-center justify-between'>
         <h2 className='text-base font-semibold text-tokena-dark dark:text-tokena-white'>
           Trending
@@ -72,7 +73,12 @@ export const Trending = ({ handleCardClick, className, ...rest }: Props) => {
           state.trendings
             .slice(0, 4)
             .map(({ item }) => (
-              <TrendingCard handleCardClick={handleCardClick} item={item} key={item.id} />
+              <TrendingCard
+                currency={currency}
+                handleCardClick={handleCardClick}
+                item={item}
+                key={item.id}
+              />
             ))
         )}
       </div>

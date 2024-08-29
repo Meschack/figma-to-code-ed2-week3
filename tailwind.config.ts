@@ -18,9 +18,7 @@ const config = {
       }
     },
     extend: {
-      screens: {
-        xs: '360px'
-      },
+      screens: { xs: '360px' },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
