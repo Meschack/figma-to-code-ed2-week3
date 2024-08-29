@@ -2,6 +2,7 @@ import { getList } from '@/actions/coins'
 import { getCurrentCurrency } from '@/actions/currencies'
 import { ErrorComponent } from '@/components/common/error'
 import { DashboardPage } from '@/components/pages/dashboard/dashboard-page'
+import { Metadata } from 'next'
 import { createSearchParamsCache, parseAsInteger, parseAsString } from 'nuqs/server'
 
 interface Props {
@@ -13,6 +14,10 @@ const searchParamsCache = createSearchParamsCache({
   items: parseAsInteger.withDefault(100),
   sort: parseAsString.withDefault('market_cap_desc')
 })
+
+export const metadata: Metadata = {
+  title: 'Tokena | Coins List'
+}
 
 const Page = async ({ searchParams }: Props) => {
   const { category, items, sort } = searchParamsCache.parse(searchParams)

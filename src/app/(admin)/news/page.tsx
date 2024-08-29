@@ -1,7 +1,12 @@
 import { ErrorComponent } from '@/components/common/error'
 import { NewsPage } from '@/components/pages/news/news-page'
+import { Metadata } from 'next'
 
 interface Props {}
+
+export const metadata: Metadata = {
+  title: 'Tokena | Coins News'
+}
 
 const Page = ({}: Props) => {
   const token = process.env.NEXT_PUBLIC_COINMARKETCAP_API_KEY

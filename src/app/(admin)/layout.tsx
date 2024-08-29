@@ -1,9 +1,14 @@
 import { getCurrentCurrency } from '@/actions/currencies'
 import { Header } from '@/components/layout/header'
 import { Sidebar } from '@/components/layout/sidebar'
+import { Metadata } from 'next'
 import { PropsWithChildren } from 'react'
 
 interface Props extends PropsWithChildren {}
+
+export const metadata: Metadata = {
+  title: 'Tokena | Dashboard'
+}
 
 const Layout = async ({ children }: Props) => {
   const currency = await getCurrentCurrency()
