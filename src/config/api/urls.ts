@@ -21,7 +21,7 @@ const COINS_LIST_MARKET_DATA = (
 
   const orderString = sort ? `&order=${sort}` : ''
 
-  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=${currency}${categoryString}${orderString}${itemsString}&page=1`
+  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=${currency}${categoryString}${orderString}${itemsString}&sparkline=true`
 }
 
 const COIN_DATA = (id: string) =>

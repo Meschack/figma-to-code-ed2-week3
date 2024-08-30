@@ -16,6 +16,7 @@ import { TableItemsLengthSelector } from './table-items-length-selector'
 import { CustomImage } from '@/components/common/custom-image'
 import { useSidebarStore } from '@/components/layout/mobile-menu'
 import { Button } from '@/components/ui/button'
+import { Line, LineChart, YAxis } from 'recharts'
 
 interface Props {
   coins: Coin[]
@@ -163,8 +164,8 @@ export const DashboardPage = ({ coins, currency }: Props) => {
               />
             </header>
 
-            <main className='no-scrollbar overflow-x-auto'>
-              <table className='w-full border-collapse'>
+            <main className='no-scrollbar w-full overflow-x-auto'>
+              <table className='w-full border-collapse overflow-x-auto'>
                 <thead>
                   <tr className='bg-tokena-light-gray *:px-6 *:py-3 *:text-left *:text-sm *:font-normal *:text-tokena-dark dark:bg-tokena-light-gray/10 *:dark:text-tokena-light-gray'>
                     <th id='empty-column-head'></th>
@@ -203,29 +204,26 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                         {isUpdating ? <Skeleton className='size-4' /> : index + 1}
                       </td>
 
-                      <td
-                        className='flex cursor-pointer items-center'
-                        onClick={() => onCoinClick(coin.id)}
-                      >
+                      <td className='' onClick={() => onCoinClick(coin.id)}>
                         {isUpdating ? (
                           <>
                             <Skeleton className='size-6 rounded-full' />
                             <Skeleton className='h-4 w-56' />
                           </>
                         ) : (
-                          <>
+                          <div className='flex cursor-pointer items-center gap-2.5'>
                             <CustomImage
                               src={coin.image}
                               alt={coin.name}
-                              className='size-6'
+                              className='size-6 rounded-full'
                               width={24}
                               height={24}
                             />
 
-                            <p className='inline-flex h-6 items-center whitespace-nowrap text-sm'>
+                            <p className='block max-w-72 truncate whitespace-nowrap pt-0.5 text-sm'>
                               {coin.name}-{coin.symbol.toUpperCase()}
                             </p>
-                          </>
+                          </div>
                         )}
                       </td>
 
@@ -240,17 +238,17 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                       <td>
                         {isUpdating ? (
                           <Skeleton className='h-4 w-6 rounded-full' />
+                        ) : coin.price_change_percentage_24h ? (
+                          <Badge
+                            variant={
+                              coin.price_change_percentage_24h > 0 ? 'success' : 'destructive'
+                            }
+                            size='lg'
+                          >
+                            {coin.price_change_percentage_24h.toFixed(2)}%
+                          </Badge>
                         ) : (
-                          coin.price_change_percentage_24h && (
-                            <Badge
-                              variant={
-                                coin.price_change_percentage_24h > 0 ? 'success' : 'destructive'
-                              }
-                              size='lg'
-                            >
-                              {coin.price_change_percentage_24h.toFixed(2)}%
-                            </Badge>
-                          )
+                          '--'
                         )}
                       </td>
 
@@ -270,7 +268,24 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                         )}
                       </td>
 
-                      {<td className='text-center text-sm'>Graphique</td>}
+                      <td className='text-center text-sm'>
+                        {isUpdating ? (
+                          <Skeleton className='h-8 w-full' />
+                        ) : (
+                          <CoinSparkline
+                            data={coin.sparkline_in_7d.price.map((value, index) => ({
+                              index,
+                              value
+                            }))}
+                            positiveEvolution={
+                              !!(
+                                coin.price_change_percentage_24h &&
+                                coin.price_change_percentage_24h > 0
+                              )
+                            }
+                          />
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -298,9 +313,29 @@ export const DashboardPage = ({ coins, currency }: Props) => {
           onOpenChange={() => onCoinClick()}
           isFavorite={state.favoriteRows.includes(state.selectedCoin)}
           onFavoriteStateToggle={() => handleColumnSelect(state.selectedCoin!)}
-          currency={currency || 'usd'}
+          currency={currency}
         />
       )}
     </>
   )
 }
+
+interface CoinSparklineProps {
+  data: Array<{ value: number; index: number }>
+  positiveEvolution: boolean
+}
+
+const CoinSparkline = ({ data, positiveEvolution }: CoinSparklineProps) =>
+  data.length === 0 ? (
+    '---'
+  ) : (
+    <LineChart
+      width={112}
+      height={32}
+      data={data}
+      className={cn(positiveEvolution ? 'text-tokena-green' : 'text-tokena-red', 'w-full')}
+    >
+      <YAxis domain={['dataMin', 'dataMax']} hide={true} tickLine={false} axisLine={false} />
+      <Line type='monotone' dataKey='value' stroke='currentColor' strokeWidth={1} dot={false} />
+    </LineChart>
+  )

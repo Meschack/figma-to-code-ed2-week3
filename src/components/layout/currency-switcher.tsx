@@ -61,7 +61,7 @@ export const CurrencySwitcher = ({ current }: Props) => {
   return (
     <div>
       {state.currenciesLoading ? (
-        <Skeleton className='h-10 w-full md:w-24' />
+        <Skeleton className='h-10 w-24' />
       ) : (
         !state.currenciesError && (
           <DropdownMenu>

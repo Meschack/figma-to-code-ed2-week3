@@ -16,7 +16,10 @@ export interface SidebarElement {
   label: string
   path: string
   icon: keyof typeof Icons
-  subElements?: []
+}
+
+export interface SidebarElement {
+  subElements?: Omit<SidebarElement, 'subElements'>[]
 }
 
 const sidebarElements: SidebarElement[] = [
@@ -24,7 +27,15 @@ const sidebarElements: SidebarElement[] = [
   { label: 'News', path: '/news', icon: 'news' },
   { label: 'Activities', path: '/activities', icon: 'chart' },
   { label: 'Cards', path: '/cards', icon: 'creditCard' },
-  { label: 'Reports', path: '/reports', icon: 'reports', subElements: [] },
+  {
+    label: 'Reports',
+    path: '/reports',
+    icon: 'reports',
+    subElements: [
+      { label: 'List', icon: 'reports', path: '/reports/#' },
+      { label: 'Generate', icon: 'reports', path: '/reports/#' }
+    ]
+  },
   { label: 'Notifications', path: '/notifications', icon: 'bell' },
   { label: 'Billing', path: '/billing', icon: 'wallet' },
   { label: 'Invoices', path: '/invoices', icon: 'invoice' },

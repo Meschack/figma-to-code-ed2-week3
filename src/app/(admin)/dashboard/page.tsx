@@ -27,12 +27,12 @@ const Page = async ({ searchParams }: Props) => {
 
     const response = await getList(category || undefined, items, sort, currency)
 
-    return <DashboardPage currency={currency || 'usd'} coins={response} />
+    return <DashboardPage currency={currency} coins={response} />
   } catch (error) {
     return (
       <ErrorComponent
         title='An error occured !'
-        description="We have not been able to fetch this page's details. Pleasen, retry !"
+        description="We have not been able to fetch this page's details. Please, retry !"
         label='Retry'
         to=''
       />
