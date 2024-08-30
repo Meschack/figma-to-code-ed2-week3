@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Cryptocurrency Dashboard
+
+A modern and responsive dashboard for tracking cryptocurrency data, built with [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/), and [Tailwind CSS](https://tailwindcss.com/). The dashboard leverages the [Coingecko API](https://www.coingecko.com/en/api) to provide real-time market data, including prices, market cap, and trading volume for a wide range of cryptocurrencies.
+
+## Cover Picture
+
+![Cryptocurrency Dashboard Cover](./src/app/opengraph-image.png)
+
+_Add a description or caption if needed._
+
+## Features
+
+- **Real-Time Data**: Fetches the latest market data from the Coingecko API, ensuring that the dashboard is always up-to-date.
+- **Responsive Design**: Fully responsive layout, optimized for both desktop and mobile devices.
+- **TypeScript**: Strongly typed components and logic for enhanced code quality and maintainability.
+- **Tailwind CSS**: Customizable and utility-first styling for fast and efficient design.
+- **Next.js**: Server-side rendering (SSR) and static site generation (SSG) for optimal performance and SEO.
+
+## Preview
+
+Check out the live preview of the application by following this link : [https://tokena-dashboard.vercel.app/dashboard](https://tokena-dashboard.vercel.app).
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14+)
+- [Pnpm](https://pnpm.io)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/Meschack/figma-to-code-ed2-week3.git cryptocurrency-dashboard
+   cd cryptocurrency-dashboard
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Set up environment variables:
+
+   Create a `.env.local` file in the root of the project and add your configuration. For example:
+
+   ```bash
+   NEXT_PUBLIC_COINGECKO_API_KEY=YOUR_COINGECKO_API_KEY
+   ```
+
+4. Start the development server:
+
+   ```bash
+   pnpm run dev
+   ```
+
+   The application should now be running on [http://localhost:3000](http://localhost:3000).
+
+### Build
+
+To create a production build:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The project is ready to be deployed on platforms like Vercel, Netlify, or any server that supports Node.js.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Contributing
 
-## Learn More
+Contributions are welcome! Please feel free to submit a pull request or open an issue.
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Acknowledgments
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [Coingecko API](https://docs.coingecko.com/v3.0.1/reference/introduction) for providing cryptocurrency data.
+- [Figma](https://www.figma.com/design/FHEN8l5THsabutI06zIgON/Tokena?node-id=0-1&t=OqqOP4nhxQQGVZ78-1) for the design of this dashboard.
+- The open-source community for the amazing tools and libraries.
