@@ -19,7 +19,7 @@ export const TableItemsLengthSelector = ({ value, onItemsLengthChange }: Props) 
       <DropdownMenuTrigger asChild>
         <Button
           variant='outline'
-          className='relative order-last block h-full w-fit min-w-22.75 truncate px-5 py-2.5 text-start'
+          className='relative order-last block h-full w-fit min-w-16 items-start truncate px-2 py-2.5 text-start text-xs sm:min-w-23 sm:px-5'
         >
           Rows
           <Icons.chevronUpDown className='absolute right-2 top-1/2 size-4 -translate-y-1/2 dark:text-tokena-light-gray' />

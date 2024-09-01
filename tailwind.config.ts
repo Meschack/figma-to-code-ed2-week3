@@ -74,7 +74,7 @@ const config = {
         }
       },
       fontSize: { xxs: '10px' },
-      spacing: { 4.5: '18px', 43: '172px', 58.5: '234px', 22.75: '89px' },
+      spacing: { 4.5: '18px', 43: '172px', 58.5: '234px', 22.75: '89px', 23: '92px' },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

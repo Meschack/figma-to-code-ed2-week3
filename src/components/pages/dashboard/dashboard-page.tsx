@@ -7,7 +7,13 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { Coin } from '@/types/coins'
-import { parseAsString, parseAsStringEnum, useQueryState, useQueryStates } from 'nuqs'
+import {
+  parseAsInteger,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryState,
+  useQueryStates
+} from 'nuqs'
 import { useState, useTransition } from 'react'
 import { Trending } from './trending'
 import { CategorySelector } from './category-selector'
@@ -27,7 +33,7 @@ interface Props {
 interface State {
   selectedCoin?: string
   favoriteRows: string[]
-  pagination: Record<'total' | 'items' | 'current', number>
+  // pagination: Record<'total' | 'items' | 'current', number>
 }
 
 const columns = [
@@ -50,10 +56,9 @@ export const sortingOptions = [
 ] as const
 
 export const DashboardPage = ({ coins, currency }: Props) => {
-  const [state, setState] = useState<State>({
-    favoriteRows: [],
-    pagination: { total: coins.length, current: 1, items: 50 }
-  })
+  const [state, setState] = useState<State>({ favoriteRows: [] })
+
+  const coinsLength = coins.length
 
   const { isOpen: sidebarIsOpen } = useSidebarStore()
 
@@ -67,6 +72,14 @@ export const DashboardPage = ({ coins, currency }: Props) => {
       )
     },
     { clearOnDefault: true, history: 'push', shallow: false, startTransition }
+  )
+
+  const [pagination, setPaginationParams] = useQueryStates(
+    {
+      page: parseAsInteger.withDefault(1),
+      items: parseAsInteger.withDefault(50)
+    },
+    { shallow: true, clearOnDefault: true }
   )
 
   const [query, setQuery] = useQueryState('query', { defaultValue: '', clearOnDefault: true })
@@ -89,10 +102,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
   }
 
   const onItemsLengthChange = (length: string) => {
-    setState(prev => ({
-      ...prev,
-      pagination: { ...prev.pagination, items: prev.pagination.items !== +length ? +length : 100 }
-    }))
+    setPaginationParams(prev => ({ ...prev, items: prev.items !== +length ? +length : 100 }))
   }
 
   const onSortingOptionChange = (value: string | undefined) => {
@@ -204,8 +214,8 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                   <tbody>
                     {coins
                       .slice(
-                        state.pagination.items * (state.pagination.current - 1),
-                        state.pagination.items * state.pagination.current
+                        pagination.items * (pagination.page - 1),
+                        pagination.items * pagination.page
                       )
                       .map((coin, index) => (
                         <tr
@@ -229,7 +239,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                             {isUpdating ? (
                               <Skeleton className='size-4' />
                             ) : (
-                              state.pagination.items * (state.pagination.current - 1) + index + 1
+                              pagination.items * (pagination.page - 1) + index + 1
                             )}
                           </td>
 
@@ -328,26 +338,20 @@ export const DashboardPage = ({ coins, currency }: Props) => {
 
             {!!coins.length && (
               <div className='flex flex-wrap items-center justify-between gap-5 p-4'>
-                <p className='order-1 md:order-none'>
-                  Showing {(state.pagination.current - 1) * state.pagination.items + 1} to{' '}
-                  {state.pagination.current * state.pagination.items} of {state.pagination.total}{' '}
-                  results
+                <p className='order-1 max-w-[60%] text-xs sm:max-w-none md:order-none md:text-sm'>
+                  Showing {(pagination.page - 1) * pagination.items + 1} to{' '}
+                  {pagination.page * pagination.items} of {coinsLength} results
                 </p>
 
                 <PaginationGenerator
-                  totalPages={Math.ceil(state.pagination.total / state.pagination.items)}
-                  currentPage={state.pagination.current}
-                  onPageChange={value =>
-                    setState(prev => ({
-                      ...prev,
-                      pagination: { ...prev.pagination, current: value }
-                    }))
-                  }
-                  className='w-fit'
+                  totalPages={Math.ceil(coinsLength / pagination.items)}
+                  currentPage={pagination.page}
+                  onPageChange={value => setPaginationParams(prev => ({ ...prev, page: value }))}
+                  className='order-none w-full md:order-1 md:w-fit'
                 />
 
                 <TableItemsLengthSelector
-                  value={state.pagination.items}
+                  value={pagination.items}
                   onItemsLengthChange={onItemsLengthChange}
                 />
               </div>
