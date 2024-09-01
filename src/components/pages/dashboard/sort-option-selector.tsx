@@ -12,12 +12,13 @@ import { sortingOptions } from './dashboard-page'
 interface Props {
   value: string
   onSortingOptionChange: (value?: string) => void
+  disabled?: boolean
 }
 
-export const SortOptionSelector = ({ onSortingOptionChange, value }: Props) => {
+export const SortOptionSelector = ({ onSortingOptionChange, value, disabled }: Props) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <Button variant='outline' size='icon'>
           <Icons.ellipsis className='dark:!text-tokena-light-gray' />
         </Button>

@@ -1,4 +1,3 @@
-import { getList } from '@/actions/coins'
 import { getCurrentCurrency } from '@/actions/currencies'
 import { ErrorComponent } from '@/components/common/error'
 import { DashboardPage } from '@/components/pages/dashboard/dashboard-page'
@@ -19,14 +18,14 @@ export const metadata: Metadata = {
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const { category, sort } = searchParamsCache.parse(searchParams)
+  // const { category, sort } = searchParamsCache.parse(searchParams)
 
   try {
     const currency = await getCurrentCurrency()
 
-    const response = await getList(category || undefined, sort, currency)
+    // const response = await getList(category || undefined, sort, currency)
 
-    return <DashboardPage currency={currency} coins={response} />
+    return <DashboardPage currency={currency} coins={/* response */ []} />
   } catch (error) {
     return (
       <ErrorComponent
