@@ -69,23 +69,18 @@ const config = {
           green: '#01B130',
           red: '#CB0101',
           blue: '#006EFF',
-          'light-gray': '#F3F4F6'
+          'light-gray': '#F3F4F6',
+          'user-profile-hover': '#414451'
         }
       },
-      fontSize: {
-        xxs: '10px'
-      },
-      spacing: {
-        4.5: '18px'
-      },
+      fontSize: { xxs: '10px' },
+      spacing: { 4.5: '18px', 43: '172px', 58.5: '234px', 22.75: '89px' },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
-      fontFamily: {
-        sans: ['var(--font-mono-sans)']
-      },
+      fontFamily: { sans: ['var(--font-mono-sans)'] },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },
@@ -109,7 +104,11 @@ const config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         wiggle: 'wiggle 300ms ease-in-out',
         shimmer: 'shimmer 2s infinite'
-      }
+      },
+      gap: { 0.5: '2px', 0.75: '3px', 1.25: '5px' },
+      borderWidth: { 1.5: '1.5px' },
+      rounded: { 2: '2px' },
+      zIndex: { 0: '0' }
     }
   },
   plugins: [require('tailwindcss-animate')]

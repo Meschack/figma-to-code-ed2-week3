@@ -10,7 +10,7 @@ export const UserProfile = ({ className, ...rest }: Props) => {
   return (
     <button
       className={cn(
-        'group flex h-fit w-full grow-0 items-center gap-2 rounded-lg p-2 hover:bg-tokena-blue/10 dark:bg-tokena-dark-blue dark:hover:bg-[#414451]',
+        'group flex h-fit w-full grow-0 items-center gap-2 rounded-lg p-2 hover:bg-tokena-blue/10 dark:bg-tokena-dark-blue dark:hover:bg-tokena-user-profile-hover',
         className
       )}
       {...rest}

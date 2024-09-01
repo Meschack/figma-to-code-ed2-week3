@@ -13,8 +13,8 @@ const badgeVariants = cva(
         success: 'bg-tokena-green/15 !text-tokena-green [&>svg]:!text-tokena-green'
       },
       size: {
-        sm: 'px-1.5 gap-[3px] text-xxs h-5',
-        lg: 'px-2 gap-[5px] text-xs h-6'
+        sm: 'px-1.5 gap-0.75 text-xxs h-5',
+        lg: 'px-2 gap-1.25 text-xs h-6'
       }
     },
     defaultVariants: { variant: 'ghost', size: 'sm' }

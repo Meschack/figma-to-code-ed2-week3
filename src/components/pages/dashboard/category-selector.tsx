@@ -51,14 +51,14 @@ export const CategorySelector = ({ current, onCategoryChange, className, ...rest
   }, [])
 
   return state.categoriesLoading ? (
-    <Skeleton className='h-10 w-full md:w-[234px]' />
+    <Skeleton className='h-10 w-full md:w-58.5' />
   ) : state.categories ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant='outline'
           className={cn(
-            'relative block w-full truncate px-5 py-2.5 text-start md:w-[234px]',
+            'relative block w-full truncate px-5 py-2.5 text-start md:w-58.5',
             className
           )}
         >
@@ -70,7 +70,7 @@ export const CategorySelector = ({ current, onCategoryChange, className, ...rest
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align='center' className='h-[172px] w-full p-1.5 md:w-[234px]'>
+      <DropdownMenuContent align='center' className='h-43 w-full p-1.5 md:w-58.5'>
         <DropdownMenuRadioGroup
           value={current || undefined}
           onValueChange={onCategoryChange}

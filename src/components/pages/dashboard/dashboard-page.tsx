@@ -146,7 +146,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
           <div className='flex flex-col items-center justify-between gap-4 md:flex-row md:items-start'>
             <div
               className={cn(
-                'relative z-[0] w-full md:w-80',
+                'relative z-0 w-full md:w-80',
                 /* Avoid to have the input component placed after the sidebar when this is not closed */
                 sidebarIsOpen && '-z-10'
               )}
