@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { Coin } from '@/types/coins'
-import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
+import { parseAsString, parseAsStringEnum, useQueryState, useQueryStates } from 'nuqs'
 import { useState, useTransition } from 'react'
 import { Trending } from './trending'
 import { CategorySelector } from './category-selector'
@@ -17,6 +17,7 @@ import { CustomImage } from '@/components/common/custom-image'
 import { useSidebarStore } from '@/components/layout/mobile-menu'
 import { Button } from '@/components/ui/button'
 import { Line, LineChart, YAxis } from 'recharts'
+import { PaginationGenerator } from '@/components/ui/pagination-generator'
 
 interface Props {
   coins: Coin[]
@@ -26,6 +27,7 @@ interface Props {
 interface State {
   selectedCoin?: string
   favoriteRows: string[]
+  pagination: Record<'total' | 'items' | 'current', number>
 }
 
 const columns = [
@@ -48,7 +50,11 @@ export const sortingOptions = [
 ] as const
 
 export const DashboardPage = ({ coins, currency }: Props) => {
-  const [state, setState] = useState<State>({ favoriteRows: [] })
+  const [state, setState] = useState<State>({
+    favoriteRows: [],
+    pagination: { total: coins.length, current: 1, items: 50 }
+  })
+
   const { isOpen: sidebarIsOpen } = useSidebarStore()
 
   const [isUpdating, startTransition] = useTransition()
@@ -56,13 +62,14 @@ export const DashboardPage = ({ coins, currency }: Props) => {
   const [searchParams, setSearchParams] = useQueryStates(
     {
       category: parseAsString,
-      items: parseAsInteger.withDefault(100),
       sort: parseAsStringEnum([...sortingOptions.map(el => el.value)]).withDefault(
         'market_cap_desc'
       )
     },
     { clearOnDefault: true, history: 'push', shallow: false, startTransition }
   )
+
+  const [query, setQuery] = useQueryState('query', { defaultValue: '', clearOnDefault: true })
 
   const onCoinClick = (coin?: string) => {
     setState(prev => ({ ...prev, selectedCoin: coin }))
@@ -82,7 +89,10 @@ export const DashboardPage = ({ coins, currency }: Props) => {
   }
 
   const onItemsLengthChange = (length: string) => {
-    setSearchParams(prev => ({ ...prev, items: prev.items !== +length ? +length : 100 }))
+    setState(prev => ({
+      ...prev,
+      pagination: { ...prev.pagination, items: prev.pagination.items !== +length ? +length : 100 }
+    }))
   }
 
   const onSortingOptionChange = (value: string | undefined) => {
@@ -141,7 +151,12 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                 sidebarIsOpen && '-z-10'
               )}
             >
-              <Input className='pl-8' placeholder='Search coin' />
+              <Input
+                defaultValue={query}
+                // onChange={event => setQuery(event.target.value)}
+                className='pl-8'
+                placeholder='Search coin'
+              />
               <Icons.search className='absolute left-2 top-1/2 -translate-y-1/2 text-tokena-dark-gray' />
             </div>
 
@@ -185,120 +200,145 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                 </thead>
 
                 <tbody>
-                  {coins.map((coin, index) => (
-                    <tr
-                      key={coin.id}
-                      className='border-b *:space-x-2.5 *:whitespace-nowrap *:px-6 *:py-3 *:text-left *:font-medium *:uppercase *:text-tokena-dark hover:bg-tokena-light-gray *:dark:text-tokena-light-gray hover:dark:bg-tokena-dark-blue-secondary'
-                    >
-                      <td className='cursor-pointer' onClick={() => handleColumnSelect(coin.id)}>
-                        <Icons.star
-                          className={cn(
-                            'size-5 dark:text-tokena-white',
-                            state.favoriteRows.includes(coin.id) &&
-                              'fill-tokena-yellow text-tokena-yellow dark:text-tokena-yellow'
-                          )}
-                        />
-                      </td>
-
-                      <td className='text-sm dark:text-tokena-light-gray'>
-                        {isUpdating ? <Skeleton className='size-4' /> : index + 1}
-                      </td>
-
-                      <td className='' onClick={() => onCoinClick(coin.id)}>
-                        {isUpdating ? (
-                          <>
-                            <Skeleton className='size-6 rounded-full' />
-                            <Skeleton className='h-4 w-56' />
-                          </>
-                        ) : (
-                          <div className='flex cursor-pointer items-center gap-2.5'>
-                            <CustomImage
-                              src={coin.image}
-                              alt={coin.name}
-                              className='size-6 rounded-full'
-                              width={24}
-                              height={24}
-                            />
-
-                            <p className='block max-w-72 truncate whitespace-nowrap pt-0.5 text-sm'>
-                              {coin.name}-{coin.symbol.toUpperCase()}
-                            </p>
-                          </div>
-                        )}
-                      </td>
-
-                      <td className='text-sm'>
-                        {isUpdating ? (
-                          <Skeleton className='h-4 w-24' />
-                        ) : (
-                          coin.current_price && `$${coin.current_price.toLocaleString('en')}`
-                        )}
-                      </td>
-
-                      <td>
-                        {isUpdating ? (
-                          <Skeleton className='h-4 w-6 rounded-full' />
-                        ) : coin.price_change_percentage_24h ? (
-                          <Badge
-                            variant={
-                              coin.price_change_percentage_24h > 0 ? 'success' : 'destructive'
-                            }
-                            size='lg'
-                          >
-                            {coin.price_change_percentage_24h.toFixed(2)}%
-                          </Badge>
-                        ) : (
-                          '--'
-                        )}
-                      </td>
-
-                      <td className='text-sm'>
-                        {isUpdating ? (
-                          <Skeleton className='h-4 w-16' />
-                        ) : (
-                          coin.total_volume && `$${coin.total_volume.toLocaleString('en')}`
-                        )}
-                      </td>
-
-                      <td className='text-sm'>
-                        {isUpdating ? (
-                          <Skeleton className='h-4 w-16' />
-                        ) : (
-                          coin.market_cap && `$${coin.market_cap.toLocaleString('en')}`
-                        )}
-                      </td>
-
-                      <td className='text-center text-sm'>
-                        {isUpdating ? (
-                          <Skeleton className='h-8 w-full' />
-                        ) : (
-                          <CoinSparkline
-                            data={coin.sparkline_in_7d.price.map((value, index) => ({
-                              index,
-                              value
-                            }))}
-                            positiveEvolution={
-                              !!(
-                                coin.price_change_percentage_24h &&
-                                coin.price_change_percentage_24h > 0
-                              )
-                            }
+                  {coins
+                    .slice(
+                      state.pagination.items * (state.pagination.current - 1),
+                      state.pagination.items * state.pagination.current
+                    )
+                    .map((coin, index) => (
+                      <tr
+                        key={coin.id}
+                        className='border-b *:space-x-2.5 *:whitespace-nowrap *:px-6 *:py-3 *:text-left *:font-medium *:uppercase *:text-tokena-dark hover:bg-tokena-light-gray *:dark:text-tokena-light-gray hover:dark:bg-tokena-dark-blue-secondary'
+                      >
+                        <td className='cursor-pointer' onClick={() => handleColumnSelect(coin.id)}>
+                          <Icons.star
+                            className={cn(
+                              'size-5 dark:text-tokena-white',
+                              state.favoriteRows.includes(coin.id) &&
+                                'fill-tokena-yellow text-tokena-yellow dark:text-tokena-yellow'
+                            )}
                           />
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+
+                        <td className='text-sm dark:text-tokena-light-gray'>
+                          {isUpdating ? (
+                            <Skeleton className='size-4' />
+                          ) : (
+                            state.pagination.items * (state.pagination.current - 1) + index + 1
+                          )}
+                        </td>
+
+                        <td className='' onClick={() => onCoinClick(coin.id)}>
+                          <div className='flex cursor-pointer items-center gap-2.5'>
+                            {isUpdating ? (
+                              <>
+                                <Skeleton className='size-6 rounded-full' />
+                                <Skeleton className='h-4 w-44' />
+                              </>
+                            ) : (
+                              <>
+                                <CustomImage
+                                  src={coin.image}
+                                  alt={coin.name}
+                                  className='size-6 rounded-full'
+                                  width={24}
+                                  height={24}
+                                />
+
+                                <p className='block max-w-72 truncate whitespace-nowrap pt-0.5 text-sm'>
+                                  {coin.name}-{coin.symbol.toUpperCase()}
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className='text-sm'>
+                          {isUpdating ? (
+                            <Skeleton className='h-4 w-24' />
+                          ) : (
+                            coin.current_price && `$${coin.current_price.toLocaleString('en')}`
+                          )}
+                        </td>
+
+                        <td>
+                          {isUpdating ? (
+                            <Skeleton className='h-4 w-6 rounded-full' />
+                          ) : coin.price_change_percentage_24h ? (
+                            <Badge
+                              variant={
+                                coin.price_change_percentage_24h > 0 ? 'success' : 'destructive'
+                              }
+                              size='lg'
+                            >
+                              {coin.price_change_percentage_24h.toFixed(2)}%
+                            </Badge>
+                          ) : (
+                            '--'
+                          )}
+                        </td>
+
+                        <td className='text-sm'>
+                          {isUpdating ? (
+                            <Skeleton className='h-4 w-16' />
+                          ) : (
+                            coin.total_volume && `$${coin.total_volume.toLocaleString('en')}`
+                          )}
+                        </td>
+
+                        <td className='text-sm'>
+                          {isUpdating ? (
+                            <Skeleton className='h-4 w-16' />
+                          ) : (
+                            coin.market_cap && `$${coin.market_cap.toLocaleString('en')}`
+                          )}
+                        </td>
+
+                        <td className='text-center text-sm'>
+                          {isUpdating ? (
+                            <Skeleton className='h-8 w-full' />
+                          ) : (
+                            <CoinSparkline
+                              data={coin.sparkline_in_7d.price.map((value, index) => ({
+                                index,
+                                value
+                              }))}
+                              positiveEvolution={
+                                !!(
+                                  coin.price_change_percentage_24h &&
+                                  coin.price_change_percentage_24h > 0
+                                )
+                              }
+                            />
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </main>
 
             <div className='flex flex-wrap items-center justify-between gap-5 p-4'>
-              <p className='order-1 md:order-none'>Showing 1 to 50 of 15027 results</p>
+              <p className='order-1 md:order-none'>
+                Showing {(state.pagination.current - 1) * state.pagination.items + 1} to{' '}
+                {state.pagination.current * state.pagination.items} of {state.pagination.total}{' '}
+                results
+              </p>
 
-              <div className='order-none w-full md:order-1 md:w-fit'>Pagination</div>
+              <PaginationGenerator
+                totalPages={Math.ceil(state.pagination.total / state.pagination.items)}
+                currentPage={state.pagination.current}
+                onPageChange={value =>
+                  setState(prev => ({
+                    ...prev,
+                    pagination: { ...prev.pagination, current: value }
+                  }))
+                }
+                className='w-fit'
+              />
 
               <TableItemsLengthSelector
-                value={searchParams.items}
+                value={state.pagination.items}
                 onItemsLengthChange={onItemsLengthChange}
               />
             </div>

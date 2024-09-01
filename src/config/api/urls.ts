@@ -9,19 +9,12 @@ const AIRDROPS_LIST = (start: number = 1, limit: number = 8) =>
 
 // COINGECKO
 
-const COINS_LIST_MARKET_DATA = (
-  category?: string,
-  items?: number,
-  sort?: string,
-  currency: string = 'usd'
-) => {
+const COINS_LIST_MARKET_DATA = (category?: string, sort?: string, currency: string = 'usd') => {
   const categoryString = category ? `&category=${category}` : ''
-
-  const itemsString = items ? `&per_page=${items}` : ''
 
   const orderString = sort ? `&order=${sort}` : ''
 
-  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=${currency}${categoryString}${orderString}${itemsString}&sparkline=true`
+  return `${coinGeckoBaseUrl}/coins/markets?vs_currency=${currency}${categoryString}${orderString}&per_page=250&sparkline=true`
 }
 
 const COIN_DATA = (id: string) =>
