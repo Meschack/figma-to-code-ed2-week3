@@ -48,6 +48,7 @@ Check out the live preview of the application by following this link : [https://
 
    ```bash
    NEXT_PUBLIC_COINGECKO_API_KEY=YOUR_COINGECKO_API_KEY
+   NEXT_PUBLIC_APP_BASE_URL=YOUR_APP_BASE_URL
    ```
 
 4. Start the development server:
@@ -82,4 +83,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - [Coingecko API](https://docs.coingecko.com/v3.0.1/reference/introduction) for providing cryptocurrency data.
 - [Figma](https://www.figma.com/design/FHEN8l5THsabutI06zIgON/Tokena?node-id=0-1&t=OqqOP4nhxQQGVZ78-1) for the design of this dashboard.
+- [Shadcn UI](https://ui.shadcn.com/docs) to browse reusable components.
 - The open-source community for the amazing tools and libraries.

@@ -65,29 +65,39 @@ export const CoinOverview = ({
 
       const details = await getCoinChartData({ id: coin, days: 180, signal, currency })
 
-      // Récupérer le prix total pour chaque occurence de trente jours
+      // Récupérer le prix total pour chaque occurrence de trente jours et s'assurer que tous les 6 derniers mois sont présents
+
+      const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
+        const date = new Date()
+        date.setMonth(date.getMonth() - i)
+        return date.toLocaleString('en-EN', { month: 'short' })
+      }).reverse()
 
       const monthlyData = details.prices.reduce(
         (acc, [timestamp, price], index) => {
           const monthIndex = Math.floor(index / 30)
+          const monthLabel = new Date(timestamp).toLocaleString('en-EN', { month: 'short' })
           if (!acc[monthIndex]) {
             acc[monthIndex] = {
               total: 0,
               count: 0,
-              label: new Date(timestamp).toLocaleString('en-EN', { month: 'short' })
+              label: monthLabel
             }
           }
           acc[monthIndex].total += price
           acc[monthIndex].count++
           return acc
         },
-        [] as Array<{ total: number; count: number; label: string }>
+        {} as Record<number, { total: number; count: number; label: string }>
       )
 
-      const chartData = monthlyData.map(({ total, count, label }) => ({
-        average: total / count,
-        label
-      }))
+      const chartData = lastSixMonths.map(month => {
+        const monthData = Object.values(monthlyData).find(data => data.label === month)
+        return {
+          average: monthData ? monthData.total / monthData.count : 0,
+          label: month
+        }
+      })
 
       setState(prev => ({ ...prev, chartData, chartDataLoading: false }))
     } catch (error) {
