@@ -4,26 +4,18 @@ import { CoinOverview } from '@/components/coins/coin-overview'
 import { Icons } from '@/components/common/icons'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { Coin } from '@/types/coins'
-import {
-  parseAsInteger,
-  parseAsString,
-  parseAsStringEnum,
-  useQueryState,
-  useQueryStates
-} from 'nuqs'
-import { useState, useTransition } from 'react'
+import { parseAsInteger, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs'
+import { useMemo, useState, useTransition } from 'react'
 import { Trending } from './trending'
 import { CategorySelector } from './category-selector'
 import { SortOptionSelector } from './sort-option-selector'
 import { TableItemsLengthSelector } from './table-items-length-selector'
-import { CustomImage } from '@/components/common/custom-image'
 import { useSidebarStore } from '@/components/layout/mobile-menu'
 import { Button } from '@/components/ui/button'
-import { Line, LineChart, YAxis } from 'recharts'
 import { PaginationGenerator } from '@/components/ui/pagination-generator'
+import { CoinTableRow } from '@/components/coins/coin-table-row'
 
 interface Props {
   coins: Coin[]
@@ -58,8 +50,6 @@ export const sortingOptions = [
 export const DashboardPage = ({ coins, currency }: Props) => {
   const [state, setState] = useState<State>({ favoriteRows: [] })
 
-  const coinsLength = coins.length
-
   const { isOpen: sidebarIsOpen } = useSidebarStore()
 
   const [isUpdating, startTransition] = useTransition()
@@ -77,12 +67,11 @@ export const DashboardPage = ({ coins, currency }: Props) => {
   const [pagination, setPaginationParams] = useQueryStates(
     {
       page: parseAsInteger.withDefault(1),
-      items: parseAsInteger.withDefault(50)
+      items: parseAsInteger.withDefault(50),
+      query: parseAsString.withDefault('').withOptions({ throttleMs: 360 })
     },
-    { shallow: true, clearOnDefault: true }
+    { clearOnDefault: true }
   )
-
-  const [query, setQuery] = useQueryState('query', { defaultValue: '', clearOnDefault: true })
 
   const onCoinClick = (coin?: string) => {
     setState(prev => ({ ...prev, selectedCoin: coin }))
@@ -111,6 +100,18 @@ export const DashboardPage = ({ coins, currency }: Props) => {
       sort: prev.sort === value ? null : (value as NonNullable<typeof prev.sort>)
     }))
   }
+
+  const matchedCoins = coins.filter(el =>
+    el.name.toLowerCase().includes(pagination.query.toLowerCase())
+  )
+
+  const statics = useMemo(() => {
+    return {
+      totalPages: Math.ceil(matchedCoins.length / pagination.items),
+      startingIndex: pagination.items * (pagination.page - 1),
+      endingIndex: pagination.items * pagination.page
+    }
+  }, [pagination, coins])
 
   return (
     <>
@@ -162,8 +163,10 @@ export const DashboardPage = ({ coins, currency }: Props) => {
               )}
             >
               <Input
-                defaultValue={query}
-                // onChange={event => setQuery(event.target.value)}
+                defaultValue={pagination.query}
+                onChange={event => {
+                  setPaginationParams(prev => ({ ...prev, query: event.target.value, page: 1 }))
+                }}
                 className='pl-8'
                 placeholder='Search coin'
               />
@@ -186,7 +189,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
               <SortOptionSelector
                 onSortingOptionChange={onSortingOptionChange}
                 value={searchParams.sort}
-                disabled={!coins.length}
+                disabled={!matchedCoins.length}
               />
             </header>
 
@@ -210,144 +213,47 @@ export const DashboardPage = ({ coins, currency }: Props) => {
                   </tr>
                 </thead>
 
-                {!!coins.length && (
+                {!!matchedCoins.length && (
                   <tbody>
-                    {coins
-                      .slice(
-                        pagination.items * (pagination.page - 1),
-                        pagination.items * pagination.page
-                      )
+                    {matchedCoins
+                      .slice(statics.startingIndex, statics.endingIndex)
                       .map((coin, index) => (
-                        <tr
+                        <CoinTableRow
                           key={coin.id}
-                          className='border-b *:space-x-2.5 *:whitespace-nowrap *:px-6 *:py-3 *:text-left *:font-medium *:uppercase *:text-tokena-dark hover:bg-tokena-light-gray *:dark:text-tokena-light-gray hover:dark:bg-tokena-dark-blue-secondary'
-                        >
-                          <td
-                            className='cursor-pointer'
-                            onClick={() => handleColumnSelect(coin.id)}
-                          >
-                            <Icons.star
-                              className={cn(
-                                'size-5 dark:text-tokena-white',
-                                state.favoriteRows.includes(coin.id) &&
-                                  'fill-tokena-yellow text-tokena-yellow dark:text-tokena-yellow'
-                              )}
-                            />
-                          </td>
-
-                          <td className='text-sm dark:text-tokena-light-gray'>
-                            {isUpdating ? (
-                              <Skeleton className='size-4' />
-                            ) : (
-                              pagination.items * (pagination.page - 1) + index + 1
-                            )}
-                          </td>
-
-                          <td className='' onClick={() => onCoinClick(coin.id)}>
-                            <div className='flex cursor-pointer items-center gap-2.5'>
-                              {isUpdating ? (
-                                <>
-                                  <Skeleton className='size-6 rounded-full' />
-                                  <Skeleton className='h-4 w-44' />
-                                </>
-                              ) : (
-                                <>
-                                  <CustomImage
-                                    src={coin.image}
-                                    alt={coin.name}
-                                    className='size-6 rounded-full'
-                                    width={24}
-                                    height={24}
-                                  />
-
-                                  <p className='block max-w-72 truncate whitespace-nowrap pt-0.5 text-sm'>
-                                    {coin.name}-{coin.symbol.toUpperCase()}
-                                  </p>
-                                </>
-                              )}
-                            </div>
-                          </td>
-
-                          <td className='text-sm'>
-                            {isUpdating ? (
-                              <Skeleton className='h-4 w-24' />
-                            ) : (
-                              coin.current_price && `$${coin.current_price.toLocaleString('en')}`
-                            )}
-                          </td>
-
-                          <td>
-                            {isUpdating ? (
-                              <Skeleton className='h-4 w-6 rounded-full' />
-                            ) : coin.price_change_percentage_24h ? (
-                              <Badge
-                                variant={
-                                  coin.price_change_percentage_24h > 0 ? 'success' : 'destructive'
-                                }
-                                size='lg'
-                              >
-                                {coin.price_change_percentage_24h.toFixed(2)}%
-                              </Badge>
-                            ) : (
-                              '--'
-                            )}
-                          </td>
-
-                          <td className='text-sm'>
-                            {isUpdating ? (
-                              <Skeleton className='h-4 w-16' />
-                            ) : (
-                              coin.total_volume && `$${coin.total_volume.toLocaleString('en')}`
-                            )}
-                          </td>
-
-                          <td className='text-sm'>
-                            {isUpdating ? (
-                              <Skeleton className='h-4 w-16' />
-                            ) : (
-                              coin.market_cap && `$${coin.market_cap.toLocaleString('en')}`
-                            )}
-                          </td>
-
-                          <td className='text-center text-sm'>
-                            {isUpdating ? (
-                              <Skeleton className='h-8 w-full' />
-                            ) : (
-                              <CoinSparkline
-                                data={coin.sparkline_in_7d.price.map((value, index) => ({
-                                  index,
-                                  value
-                                }))}
-                                positiveEvolution={
-                                  !!(
-                                    coin.price_change_percentage_24h &&
-                                    coin.price_change_percentage_24h > 0
-                                  )
-                                }
-                              />
-                            )}
-                          </td>
-                        </tr>
+                          coin={coin}
+                          index={index}
+                          handleColumnSelect={handleColumnSelect}
+                          isUpdating={isUpdating}
+                          onCoinClick={onCoinClick}
+                          pagination={pagination}
+                          isFavorite={state.favoriteRows.includes(coin.id)}
+                        />
                       ))}
                   </tbody>
                 )}
               </table>
             </main>
 
-            {!coins.length && <p className='mx-auto w-fit p-4'>Any coin could not be found !</p>}
+            {!matchedCoins.length && <p className='mx-auto w-fit p-4'>No coins were found!</p>}
 
-            {!!coins.length && (
+            {!!matchedCoins.length && (
               <div className='flex flex-wrap items-center justify-between gap-5 p-4'>
                 <p className='order-1 max-w-[60%] text-xs sm:max-w-none md:order-none md:text-sm'>
-                  Showing {(pagination.page - 1) * pagination.items + 1} to{' '}
-                  {pagination.page * pagination.items} of {coinsLength} results
+                  Showing {statics.startingIndex + (matchedCoins.length ? 1 : 0)} to{' '}
+                  {statics.endingIndex < matchedCoins.length
+                    ? statics.endingIndex
+                    : matchedCoins.length}{' '}
+                  of {matchedCoins.length} results
                 </p>
 
                 <PaginationGenerator
-                  totalPages={Math.ceil(coinsLength / pagination.items)}
+                  totalPages={statics.totalPages}
                   currentPage={pagination.page}
                   onPageChange={value => setPaginationParams(prev => ({ ...prev, page: value }))}
-                  className='order-none w-full md:order-1 md:w-fit'
+                  className={cn(
+                    'order-none w-full md:order-1 md:w-fit',
+                    (!matchedCoins.length || statics.totalPages === 1) && 'hidden'
+                  )}
                 />
 
                 <TableItemsLengthSelector
@@ -373,23 +279,3 @@ export const DashboardPage = ({ coins, currency }: Props) => {
     </>
   )
 }
-
-interface CoinSparklineProps {
-  data: Array<{ value: number; index: number }>
-  positiveEvolution: boolean
-}
-
-const CoinSparkline = ({ data, positiveEvolution }: CoinSparklineProps) =>
-  data.length === 0 ? (
-    '---'
-  ) : (
-    <LineChart
-      width={112}
-      height={32}
-      data={data}
-      className={cn(positiveEvolution ? 'text-tokena-green' : 'text-tokena-red', 'w-full')}
-    >
-      <YAxis domain={['dataMin', 'dataMax']} hide={true} tickLine={false} axisLine={false} />
-      <Line type='monotone' dataKey='value' stroke='currentColor' strokeWidth={1} dot={false} />
-    </LineChart>
-  )
