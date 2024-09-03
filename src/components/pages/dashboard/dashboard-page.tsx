@@ -91,7 +91,11 @@ export const DashboardPage = ({ coins, currency }: Props) => {
   }
 
   const onItemsLengthChange = (length: string) => {
-    setPaginationParams(prev => ({ ...prev, items: prev.items !== +length ? +length : 100 }))
+    setPaginationParams(prev => ({
+      ...prev,
+      items: prev.items !== +length ? +length : 100,
+      page: 1
+    }))
   }
 
   const onSortingOptionChange = (value: string | undefined) => {
