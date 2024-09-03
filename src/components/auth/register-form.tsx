@@ -57,14 +57,14 @@ export const RegisterForm = () => {
         </div>
 
         <Button type='button' className='w-full' asChild>
-          <Link href='/dashboard'>Login</Link>
+          <Link href='/dashboard'>Sign up</Link>
         </Button>
       </form>
 
       <p className='mt-4 text-center text-sm text-tokena-dark dark:text-tokena-light-gray'>
         Do you have already an account ?{' '}
-        <Button asChild variant='link'>
-          <a href='/login' className='px-0 !text-blue-600'>
+        <Button asChild variant='link' className='px-0'>
+          <a href='/login' className='!text-tokena-blue'>
             Sign in
           </a>
         </Button>

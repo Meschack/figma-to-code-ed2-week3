@@ -4,7 +4,7 @@ import { Icons } from '@/components/common/icons'
 import { Button } from '../ui/button'
 
 interface Props extends ComponentProps<typeof Button> {
-  loading: boolean
+  loading?: boolean
   loadingText?: string
   icon?: React.ComponentType<{ className?: string }>
 }

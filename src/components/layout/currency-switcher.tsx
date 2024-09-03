@@ -68,7 +68,7 @@ export const CurrencySwitcher = ({ current }: Props) => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant='outline'
-                className='relative block h-full w-fit min-w-22.75 px-5 py-2.5 text-start uppercase'
+                className='relative flex h-full w-fit min-w-22.75 items-center justify-start px-5 py-2.5 text-start uppercase'
               >
                 {current}
                 <Icons.chevronUpDown className='absolute right-2 top-1/2 size-4 -translate-y-1/2 dark:text-tokena-light-gray' />
