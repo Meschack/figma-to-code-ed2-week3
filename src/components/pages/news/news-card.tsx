@@ -15,7 +15,7 @@ export const NewsCard = ({}: Props) => {
           alt='Marketplace logo'
           width={32}
           height={32}
-          className='size-8'
+          className='size-8 rounded-full'
         />
 
         <div className='*:text-xs'>

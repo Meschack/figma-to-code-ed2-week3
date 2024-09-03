@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import { ComponentProps } from 'react'
 
@@ -10,9 +12,6 @@ export const CustomImage = ({ placeholder, blurDataURL, src, alt, ...rest }: Pro
     <Image
       src={src.toString().startsWith('missing') ? placeholderImage.src : src}
       alt={alt ?? 'Generic alternative text'}
-      /* placeholder={placeholder || 'blur'}
-      blurDataURL={placeholderImage.src || blurDataURL}
-      {...rest} */
       onError={event =>
         navigator.onLine && ((event.target as HTMLImageElement).src = placeholderImage.src)
       }

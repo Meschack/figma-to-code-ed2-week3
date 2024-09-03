@@ -17,10 +17,10 @@ const Layout = async ({ children }: Props) => {
     <div className='flex h-screen w-screen overflow-hidden'>
       <Sidebar className='hidden xl:flex' />
 
-      <main className='flex w-full flex-col'>
+      <main className='flex w-full grow-0 flex-col'>
         <Header className='sticky' currency={currency} />
 
-        <div className='no-scrollbar w-full overflow-scroll px-5 py-6 md:px-12 xl:px-6'>
+        <div className='no-scrollbar w-full grow-0 overflow-scroll px-5 py-6 md:px-12 xl:px-6'>
           {children}
         </div>
       </main>

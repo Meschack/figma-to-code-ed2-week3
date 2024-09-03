@@ -1,66 +1,13 @@
-'use client'
-
-import { AIRDROPS_LIST } from '@/config/api/urls'
-import { CustomError } from '@/lib/custom-error'
-import { fetcher } from '@/lib/fetcher'
-import { useEffect, useState } from 'react'
 import { NewsCard } from './news-card'
 import { Icons } from '@/components/common/icons'
 
-interface Props {
-  token: string
-}
-
-interface State {
-  airdrops: any[]
-  loading: boolean
-  error?: string
-}
-
-interface GetParamsType {
-  start?: number
-  limit?: number
-  signal?: AbortSignal
-}
-
-export const NewsPage = ({ token }: Props) => {
-  const [state, setState] = useState<State>({ airdrops: Array.from({ length: 8 }), loading: true })
-
-  const getAirdrops = async ({ limit, signal, start }: GetParamsType) => {
-    try {
-      setState(prev => ({ ...prev, loading: true }))
-
-      const response = await fetcher.get(AIRDROPS_LIST(start, limit), {
-        signal,
-        headers: { 'X-CMC_PRO_API_KEY': token }
-      })
-
-      setState(prev => ({
-        ...prev,
-        airdrops: [...prev.airdrops, ...response.data],
-        loading: false
-      }))
-    } catch (error) {
-      if (error instanceof CustomError) {
-        setState(prev => ({ ...prev, loading: false, error: error.message }))
-
-        return
-      }
-    }
-  }
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    getAirdrops({ signal: controller.signal })
-
-    return () => controller.abort()
-  }, [])
+export const NewsPage = () => {
+  const news = Array.from({ length: 8 })
 
   return (
     <div className='space-y-5'>
-      <div role='list' className='grid gap-3 md:grid-cols-2 xl:grid-cols-4'>
-        {state.airdrops.map((airdrop, index) => (
+      <div role='list' className='grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4'>
+        {news.map((_, index) => (
           <NewsCard role='listitem' key={index} />
         ))}
       </div>
@@ -71,16 +18,4 @@ export const NewsPage = ({ token }: Props) => {
       </button>
     </div>
   )
-
-  if (state.loading) {
-    return <p>Chargement en cours...</p>
-  }
-
-  if (state.error) {
-    return <p>Erreur : {state.error}</p>
-  }
-
-  if (state.airdrops.length === 0) {
-    return <p>Aucun airdrop disponible pour le moment.</p>
-  }
 }

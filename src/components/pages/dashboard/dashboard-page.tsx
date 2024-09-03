@@ -115,7 +115,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
 
   return (
     <>
-      <div className='w-full space-y-7 md:space-y-10'>
+      <div className='w-full grow-0 space-y-7 md:space-y-10'>
         <div className='grid gap-5 xl:grid-cols-4'>
           <div className='w-full space-y-2 rounded-xl border p-4'>
             <div className='space-y-1.5'>
@@ -153,7 +153,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
           <Trending currency={currency} handleCardClick={onCoinClick} className='xl:col-span-3' />
         </div>
 
-        <div className='space-y-8'>
+        <div className='grow-0 space-y-8'>
           <div className='flex flex-col items-center justify-between gap-4 md:flex-row md:items-start'>
             <div
               className={cn(
@@ -180,7 +180,7 @@ export const DashboardPage = ({ coins, currency }: Props) => {
             />
           </div>
 
-          <div className='overflow-hidden rounded-xl border border-tokena-gray dark:border-tokena-dark-gray'>
+          <div className='rounded-xl border border-tokena-gray dark:border-tokena-dark-gray xl:max-w-[calc(100vw-240px-48px)]'>
             <header className='flex items-center justify-between p-4'>
               <span className='text-base font-semibold text-tokena-dark dark:text-tokena-light-gray'>
                 Market
@@ -193,8 +193,8 @@ export const DashboardPage = ({ coins, currency }: Props) => {
               />
             </header>
 
-            <main className='no-scrollbar w-full overflow-x-auto' suppressHydrationWarning>
-              <table className='w-full border-collapse overflow-x-auto' suppressHydrationWarning>
+            <main className='no-scrollbar w-full overflow-x-auto'>
+              <table className='w-full border-collapse'>
                 <thead>
                   <tr className='bg-tokena-light-gray *:px-6 *:py-3 *:text-left *:text-sm *:font-normal *:text-tokena-dark dark:bg-tokena-light-gray/10 *:dark:text-tokena-light-gray'>
                     <th id='empty-column-head'></th>
